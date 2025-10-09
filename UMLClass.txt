@@ -33,7 +33,7 @@ depth: int): Move;]
 
 [<<interface>>;IObserver|+ update(): void]
 
-[<<interface>>;IObservable|+ addObserver(observer: IObserver): void;+ notifyObservers(): void]
+[<<abstract>>;IObservable|+ addObserver(observer: IObserver): void;+ notifyObservers(): void]
 
 [<<interface>>;IView|+ draw(): void]
 
@@ -61,5 +61,5 @@ depth: int): Move;]
 [Board]++->[Piece]
 [Board]++->[Square]
 
-[IObservable]^-.-[Board]
-[IObservable]^-.-[MoveHistory]
+[IObservable]^-[Board]
+[IObservable]^-[MoveHistory]

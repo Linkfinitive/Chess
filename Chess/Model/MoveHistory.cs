@@ -1,18 +1,12 @@
 namespace Model;
 
-public class MoveHistory : IObservable
+public class MoveHistory : Observable
 {
     private Stack<Move> _moves;
-    private List<IObserver> _observers;
 
-    public void addObserver(IObserver observer)
+    public MoveHistory() : base()
     {
-
-    }
-
-    public void notifyObservers()
-    {
-
+        _moves = new Stack<Move>();
     }
 
     public void addMove(Move move)

@@ -2,8 +2,8 @@ namespace Model;
 
 public class Pawn : Piece
 {
-    private PlayerColors _color;
-    private Square _location;
+
+    public Pawn(PlayerColors color, Square location) : base(color, location) { }
 
     public override List<Move> getLegalMoves()
     {

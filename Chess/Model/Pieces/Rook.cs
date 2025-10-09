@@ -2,8 +2,8 @@ namespace Model;
 
 public class Rook : Piece
 {
-    private PlayerColors _color;
-    private Square _location;
+
+    public Rook(PlayerColors color, Square location) : base(color, location) { }
 
     public override List<Move> getLegalMoves()
     {

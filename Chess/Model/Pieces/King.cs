@@ -2,8 +2,8 @@ namespace Model;
 
 public class King : Piece
 {
-    private PlayerColors _color;
-    private Square _location;
+
+    public King(PlayerColors color, Square location) : base(color, location) { }
 
     public override List<Move> getLegalMoves()
     {

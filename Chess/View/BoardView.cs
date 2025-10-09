@@ -3,6 +3,11 @@ namespace View;
 
 public class BoardView : IObserver, IView
 {
+    public BoardView()
+    {
+
+    }
+
     public void update()
     {
 
