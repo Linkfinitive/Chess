@@ -1,0 +1,65 @@
+// Classes
+[GameController|- board: Board;- engine: Engine;- boardView: BoardView;- moveListView: MoveListView;- playerToMove: PlayerColors;- moveHistory: MoveHistory|+ handleMove(): void]
+
+[Board|- pieces: List\<Piece\>;- observers: List\<IObserver\>]
+
+[Square|- color: PlayerColors;- rank: int;-file: int|+ getAlgebraicPosition(): string]
+
+[Engine|- evaluationStrategy: IEvaluationStrategy|+ findBestMove(board: Board
+depth: int): Move;]
+
+[MoveHistory|- moves: Stack\<Move\>|+ addMove(move: Move): void;+ undoLastMove(): void]
+
+[Move|- from: Square;- to: Square;- pieceMoved: Piece;- pieceCaptured: Piece?;- promotion: boolean|+ getAlgebraicMove(): string;]
+
+[<<abstract>>;Piece|- color: PlayerColors;- location: Square|+ getLegalMoves(): List\<Move\>]
+
+[Piece]^-[Pawn]
+[Piece]^-[Rook]
+[Piece]^-[Knight]
+[Piece]^-[Bishop]
+[Piece]^-[Queen]
+[Piece]^-[King]
+
+[BoardView]
+[MoveListView]
+
+[IEvaluationStrategy]^-.-[ExampleEvaluationStrategy|+ evaluate(board: Board): int]
+
+// Interfaces
+[<<interface>>;IEvaluationStrategy|+ evaluate(board: Board): int]
+
+[<<interface>>;ICommand|+ execute(): void;+undo(): void]
+
+[<<interface>>;IObserver|+ update(): void]
+
+[<<interface>>;IObservable|+ addObserver(observer: IObserver): void;+ notifyObservers(): void]
+
+[<<interface>>;IView|+ draw(): void]
+
+// Enums
+[<<enumeration>>;PlayerColors|WHITE;BLACK]
+
+// Connections
+[GameController]+->[MoveHistory]
+[MoveHistory]++->[Move]
+[ICommand]^-.-[Move]
+
+[GameController]+->[BoardView]
+[GameController]+->[MoveListView]
+[IObserver]^-.-[BoardView]
+[IObserver]^-.-[MoveListView]
+[IView]^-.-[BoardView]
+[IView]^-.-[MoveListView]
+[MoveListView]observes-.->[MoveHistory]
+[BoardView]observes-.->[Board]
+
+[GameController]+->[Engine]
+[Engine]+->[IEvaluationStrategy]
+
+[GameController]+->[Board]
+[Board]++->[Piece]
+[Board]++->[Square]
+
+[IObservable]^-.-[Board]
+[IObservable]^-.-[MoveHistory]
