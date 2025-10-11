@@ -5,7 +5,7 @@ public class Board
     private List<Piece> _pieces;
     private List<Square> _squares;
 
-    public Board() : base()
+    public Board()
     {
         _squares = new List<Square>();
         _pieces = new List<Piece>();

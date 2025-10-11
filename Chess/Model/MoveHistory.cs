@@ -4,7 +4,7 @@ public class MoveHistory
 {
     private Stack<Move> _moves;
 
-    public MoveHistory() : base()
+    public MoveHistory()
     {
         _moves = new Stack<Move>();
     }
