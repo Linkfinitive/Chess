@@ -1,4 +1,4 @@
-namespace Model.Engine;
+namespace Chess.Model.Engine;
 
 public class ExampleEvaluationStrategy : IEvaluationStrategy
 {

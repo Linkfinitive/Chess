@@ -1,6 +1,6 @@
-namespace Model;
+namespace Chess.Model;
 
-public class Board : Observable
+public class Board
 {
     private List<Piece> _pieces;
     private List<Square> _squares;
@@ -10,17 +10,17 @@ public class Board : Observable
         _squares = new List<Square>();
         _pieces = new List<Piece>();
 
-        //add all the squares
+        //Add all the squares
         for (int i = 0; i < 64; i++)
         {
             int rankToAdd = (int)Math.Floor((double)i / 8);
             int fileToAdd = i % 8;
-            PlayerColors colorToAdd = (rankToAdd + fileToAdd % 2 == 0) ? PlayerColors.BLACK : PlayerColors.WHITE;
+            PlayerColors colorToAdd = ((rankToAdd + fileToAdd) % 2 == 0) ? PlayerColors.BLACK : PlayerColors.WHITE;
 
             _squares.Add(new Square(rankToAdd, fileToAdd, colorToAdd));
         }
 
-        //add white's pieces
+        //Add white's pieces
         _pieces.Add(new Rook(PlayerColors.WHITE, _squares.Find(s => s.getAlgebraicPosition() == "a1")!));
         _pieces.Add(new Knight(PlayerColors.WHITE, _squares.Find(s => s.getAlgebraicPosition() == "b1")!));
         _pieces.Add(new Bishop(PlayerColors.WHITE, _squares.Find(s => s.getAlgebraicPosition() == "c1")!));
@@ -38,7 +38,7 @@ public class Board : Observable
         _pieces.Add(new Pawn(PlayerColors.WHITE, _squares.Find(s => s.getAlgebraicPosition() == "g2")!));
         _pieces.Add(new Pawn(PlayerColors.WHITE, _squares.Find(s => s.getAlgebraicPosition() == "h2")!));
 
-        //add black's pieces
+        //Add black's pieces
         _pieces.Add(new Rook(PlayerColors.BLACK, _squares.Find(s => s.getAlgebraicPosition() == "a8")!));
         _pieces.Add(new Knight(PlayerColors.BLACK, _squares.Find(s => s.getAlgebraicPosition() == "b8")!));
         _pieces.Add(new Bishop(PlayerColors.BLACK, _squares.Find(s => s.getAlgebraicPosition() == "c8")!));
@@ -55,5 +55,15 @@ public class Board : Observable
         _pieces.Add(new Pawn(PlayerColors.BLACK, _squares.Find(s => s.getAlgebraicPosition() == "f7")!));
         _pieces.Add(new Pawn(PlayerColors.BLACK, _squares.Find(s => s.getAlgebraicPosition() == "g7")!));
         _pieces.Add(new Pawn(PlayerColors.BLACK, _squares.Find(s => s.getAlgebraicPosition() == "h7")!));
+    }
+
+    public List<Square> getSquares()
+    {
+        return _squares;
+    }
+
+    public List<Piece> getPieces()
+    {
+        return _pieces;
     }
 }

@@ -1,26 +1,39 @@
-using Model;
-using Model.Engine;
-using View;
+using Chess.Model;
+using Chess.Model.Engine;
+using Chess.View;
 
-namespace Controller;
+namespace Chess.Controller;
 
 public class GameController
 {
-    private Board _board;
     private Engine _engine;
+
+    private Board _board;
     private MoveHistory _moveHistory;
-    private BoardView _boardView;
-    private MoveListView _moveListView;
+
+    private List<IView> _views;
     private PlayerColors _playerToMove;
 
     public GameController()
     {
-        _board = new Board();
         _engine = new Engine();
+
+        _board = new Board();
         _moveHistory = new MoveHistory();
-        _boardView = new BoardView();
-        _moveListView = new MoveListView();
+
         _playerToMove = PlayerColors.WHITE;
+
+        BoardView boardView = new BoardView(_board);
+        MoveListView moveListView = new MoveListView(_moveHistory);
+        _views = new List<IView> { boardView, moveListView };
+    }
+
+    public void drawViews()
+    {
+        foreach (IView v in _views)
+        {
+            v.draw();
+        }
     }
 
     public void handleMove()

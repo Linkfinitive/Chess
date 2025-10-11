@@ -1,4 +1,4 @@
-namespace Model;
+namespace Chess.Model;
 
 public class Queen : Piece
 {

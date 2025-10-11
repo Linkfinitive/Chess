@@ -1,6 +1,6 @@
-namespace Model;
+namespace Chess.Model;
 
-public class MoveHistory : Observable
+public class MoveHistory
 {
     private Stack<Move> _moves;
 

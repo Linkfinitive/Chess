@@ -1,16 +1,15 @@
-using Model;
-namespace View;
+using Chess.Model;
 
-public class MoveListView : IObserver, IView
+namespace Chess.View;
+
+public class MoveListView : IView
 {
-    public MoveListView()
+
+    private MoveHistory _moveHistory;
+
+    public MoveListView(MoveHistory moveHistory)
     {
-
-    }
-
-    public void update()
-    {
-
+        _moveHistory = moveHistory;
     }
 
     public void draw()

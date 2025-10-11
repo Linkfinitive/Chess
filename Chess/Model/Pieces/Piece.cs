@@ -1,4 +1,4 @@
-namespace Model;
+namespace Chess.Model;
 
 public abstract class Piece
 {
@@ -12,4 +12,11 @@ public abstract class Piece
     }
 
     public abstract List<Move> getLegalMoves();
+
+    public Square getLocation()
+    {
+        return _location;
+    }
+
+    public PlayerColors getColor() { return _color; }
 }

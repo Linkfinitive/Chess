@@ -1,4 +1,5 @@
-namespace Model;
+namespace Chess.Model;
+
 public class Square
 {
     private PlayerColors _color;
@@ -59,4 +60,11 @@ public class Square
         }
         return $"{algebraicFile}{algebraicRank}";
     }
+
+    public (int, int) getRankAndFile()
+    {
+        return (_rank, _file);
+    }
+
+    public PlayerColors getColor() { return _color; }
 }

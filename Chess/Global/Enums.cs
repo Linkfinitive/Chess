@@ -1,4 +1,4 @@
-namespace Model;
+namespace Chess;
 
 public enum PlayerColors
 {
