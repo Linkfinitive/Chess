@@ -1,5 +1,5 @@
 // Classes
-[GameController|- board: Board;- engine: Engine;- boardView: BoardView;- moveListView: MoveListView;- playerToMove: PlayerColors;- moveHistory: MoveHistory|+ handleMove(): void]
+[GameController|- board: Board;- engine: Engine;- views: List\<IView\>;- playerToMove: PlayerColors;- moveHistory: MoveHistory|+ drawViews(): void;+ handleMove(): void]
 
 [Board|- pieces: List\<Piece\>;- observers: List\<IObserver\>]
 
@@ -21,8 +21,8 @@ depth: int): Move;]
 [Piece]^-[Queen]
 [Piece]^-[King]
 
-[BoardView]
-[MoveListView]
+[BoardView|- board: Board|+ draw(): void;- drawSquares(squares: List\<Square\>): void;- drawPieces(pieces: List\<Piece\>): void;- calculatePosition(s: Square): (int, int)]
+[MoveListView|- moveHistory: MoveHistory|+ draw(): void]
 
 [IEvaluationStrategy]^-.-[ExampleEvaluationStrategy|+ evaluate(board: Board): int]
 
@@ -31,28 +31,26 @@ depth: int): Move;]
 
 [<<interface>>;ICommand|+ execute(): void;+undo(): void]
 
-[<<interface>>;IObserver|+ update(): void]
-
-[<<abstract>>;IObservable|+ addObserver(observer: IObserver): void;+ notifyObservers(): void]
-
 [<<interface>>;IView|+ draw(): void]
 
 // Enums
 [<<enumeration>>;PlayerColors|WHITE;BLACK]
+
+//Globals
+[<<static>>;GlobalSizes|+ WINDOW_HEIGHT: int;+ WINDOW_WIDTH: int;+ BOARD_SIZE: int;+ BOARD_SQUARE_SIZE: int;+ BOARD_VERTICAL_OFFSET: int;+ BOARD_LEFT_OFFSET: int|+ PrintFields(): void]
+
+[<<static>>;CustomColors|+ WHITE_SQUARE: Color;+ BLACK_SQUARE: Color;+ BACKGROUND: Color;+ WHITE_PIECE: Color;+ BLACK_PIECE: Color]
 
 // Connections
 [GameController]+->[MoveHistory]
 [MoveHistory]++->[Move]
 [ICommand]^-.-[Move]
 
-[GameController]+->[BoardView]
-[GameController]+->[MoveListView]
-[IObserver]^-.-[BoardView]
-[IObserver]^-.-[MoveListView]
+[GameController]+->[IView]
 [IView]^-.-[BoardView]
 [IView]^-.-[MoveListView]
-[MoveListView]observes-.->[MoveHistory]
-[BoardView]observes-.->[Board]
+[MoveListView]+->[MoveHistory]
+[BoardView]+->[Board]
 
 [GameController]+->[Engine]
 [Engine]+->[IEvaluationStrategy]
@@ -60,6 +58,3 @@ depth: int): Move;]
 [GameController]+->[Board]
 [Board]++->[Piece]
 [Board]++->[Square]
-
-[IObservable]^-[Board]
-[IObservable]^-[MoveHistory]
