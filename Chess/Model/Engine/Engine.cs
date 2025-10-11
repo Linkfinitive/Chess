@@ -9,7 +9,7 @@ public class Engine
         _evaluationStrategy = new ExampleEvaluationStrategy();
     }
 
-    public Move findBestMove(Board board, int depth)
+    public Move FindBestMove(Board board, int depth)
     {
         //the below is, naturally, a placeholder to stop the lsp from yelling
 

@@ -7,7 +7,7 @@ public class ExampleEvaluationStrategy : IEvaluationStrategy
 
     }
 
-    public int evaluate(Board board)
+    public int Evaluate(Board board)
     {
         return 0;
     }

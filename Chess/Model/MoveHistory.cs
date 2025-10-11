@@ -9,12 +9,12 @@ public class MoveHistory
         _moves = new Stack<Move>();
     }
 
-    public void addMove(Move move)
+    public void AddMove(Move move)
     {
 
     }
 
-    public void undoLastMove()
+    public void UndoLastMove()
     {
 
     }

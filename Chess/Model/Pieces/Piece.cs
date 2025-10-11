@@ -2,21 +2,14 @@ namespace Chess.Model;
 
 public abstract class Piece
 {
-    private PlayerColors _color;
-    private Square _location;
+    public PlayerColors Color { get; }
+    public Square Location { get; }
 
     public Piece(PlayerColors color, Square location)
     {
-        _color = color;
-        _location = location;
+        Color = color;
+        Location = location;
     }
 
-    public abstract List<Move> getLegalMoves();
-
-    public Square getLocation()
-    {
-        return _location;
-    }
-
-    public PlayerColors getColor() { return _color; }
+    public abstract List<Move> GetLegalMoves();
 }

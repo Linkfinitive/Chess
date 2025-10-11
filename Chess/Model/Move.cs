@@ -21,17 +21,17 @@ public class Move : ICommand
     public Move(Square from, Square to, Piece pieceMoved, Boolean promotion) : this(from, to, pieceMoved, null, promotion) { }
     public Move(Square from, Square to, Piece pieceMoved) : this(from, to, pieceMoved, null, false) { }
 
-    public string getAlgebraicMove()
+    public string GetAlgebraicMove()
     {
         return "";
     }
 
-    public void execute()
+    public void Execute()
     {
 
     }
 
-    public void undo()
+    public void Undo()
     {
 
     }

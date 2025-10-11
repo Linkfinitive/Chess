@@ -12,7 +12,7 @@ public class MoveListView : IView
         _moveHistory = moveHistory;
     }
 
-    public void draw()
+    public void Draw()
     {
 
     }

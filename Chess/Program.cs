@@ -9,9 +9,9 @@ GlobalSizes.PrintFields();
 do
 {
     ProcessEvents();
-    ClearScreen(CustomColors.BACKGROUND);
+    ClearScreen(Theme.BACKGROUND);
 
-    controller.drawViews();
+    controller.DrawViews();
 
     RefreshScreen();
 } while (!QuitRequested());

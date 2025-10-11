@@ -1,18 +1,18 @@
 // Classes
-[GameController|- board: Board;- engine: Engine;- views: List\<IView\>;- playerToMove: PlayerColors;- moveHistory: MoveHistory|+ drawViews(): void;+ handleMove(): void]
+[GameController|-board: Board;-engine: Engine;-views: List\<IView\>;-playerToMove: PlayerColors;-moveHistory: MoveHistory|+DrawViews(): void;+HandleMove(): void]
 
-[Board|- pieces: List\<Piece\>;- observers: List\<IObserver\>]
+[Board|+Pieces: List\<Piece\> \<\<readonly\>\>;+Squares: List\<Square\> \<\<readonly\>\>]
 
-[Square|- color: PlayerColors;- rank: int;-file: int|+ getAlgebraicPosition(): string]
+[Square|+Color: PlayerColors \<\<readonly\>\>;+Rank: int \<\<readonly\>\>;+File: int \<\<readonly\>\>|+GetAlgebraicPosition(): string]
 
-[Engine|- evaluationStrategy: IEvaluationStrategy|+ findBestMove(board: Board
+[Engine|-evaluationStrategy: IEvaluationStrategy|+FindBestMove(board: Board
 depth: int): Move;]
 
-[MoveHistory|- moves: Stack\<Move\>|+ addMove(move: Move): void;+ undoLastMove(): void]
+[MoveHistory|-moves: Stack\<Move\>|+AddMove(move: Move): void;+UndoLastMove(): void]
 
-[Move|- from: Square;- to: Square;- pieceMoved: Piece;- pieceCaptured: Piece?;- promotion: boolean|+ getAlgebraicMove(): string;]
+[Move|-from: Square;-to: Square;-pieceMoved: Piece;-pieceCaptured: Piece?;-promotion: boolean|+GetAlgebraicMove(): string;]
 
-[<<abstract>>;Piece|- color: PlayerColors;- location: Square|+ getLegalMoves(): List\<Move\>]
+[<<abstract>>;Piece|+Color: PlayerColors \<\<readonly\>\>;+Location: Square \<\<readonly\>\>|+GetLegalMoves(): List\<Move\>]
 
 [Piece]^-[Pawn]
 [Piece]^-[Rook]
@@ -21,25 +21,25 @@ depth: int): Move;]
 [Piece]^-[Queen]
 [Piece]^-[King]
 
-[BoardView|- board: Board|+ draw(): void;- drawSquares(squares: List\<Square\>): void;- drawPieces(pieces: List\<Piece\>): void;- calculatePosition(s: Square): (int, int)]
-[MoveListView|- moveHistory: MoveHistory|+ draw(): void]
+[BoardView|-board: Board|+Draw(): void;-DrawSquares(squares: List\<Square\>): void;-DrawPieces(pieces: List\<Piece\>): void;-CalculatePosition(s: Square): (int, int)]
+[MoveListView|-moveHistory: MoveHistory|+Draw(): void]
 
-[IEvaluationStrategy]^-.-[ExampleEvaluationStrategy|+ evaluate(board: Board): int]
+[IEvaluationStrategy]^-.-[ExampleEvaluationStrategy|+Evaluate(board: Board): int]
 
 // Interfaces
-[<<interface>>;IEvaluationStrategy|+ evaluate(board: Board): int]
+[<<interface>>;IEvaluationStrategy|+Evaluate(board: Board): int]
 
-[<<interface>>;ICommand|+ execute(): void;+undo(): void]
+[<<interface>>;ICommand|+Execute(): void;+Undo(): void]
 
-[<<interface>>;IView|+ draw(): void]
+[<<interface>>;IView|+Draw(): void]
 
 // Enums
 [<<enumeration>>;PlayerColors|WHITE;BLACK]
 
 //Globals
-[<<static>>;GlobalSizes|+ WINDOW_HEIGHT: int;+ WINDOW_WIDTH: int;+ BOARD_SIZE: int;+ BOARD_SQUARE_SIZE: int;+ BOARD_VERTICAL_OFFSET: int;+ BOARD_LEFT_OFFSET: int|+ PrintFields(): void]
+[<<static>>;GlobalSizes|+WINDOW_HEIGHT: int;+WINDOW_WIDTH: int;+BOARD_SIZE: int;+BOARD_SQUARE_SIZE: int;+BOARD_VERTICAL_OFFSET: int;+BOARD_LEFT_OFFSET: int|+PrintFields(): void]
 
-[<<static>>;CustomColors|+ WHITE_SQUARE: Color;+ BLACK_SQUARE: Color;+ BACKGROUND: Color;+ WHITE_PIECE: Color;+ BLACK_PIECE: Color]
+[<<static>>;Theme|+WHITE_SQUARE: Color;+BLACK_SQUARE: Color;+BACKGROUND: Color;+WHITE_PIECE: Color;+BLACK_PIECE: Color]
 
 // Connections
 [GameController]+->[MoveHistory]

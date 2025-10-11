@@ -28,15 +28,15 @@ public class GameController
         _views = new List<IView> { boardView, moveListView };
     }
 
-    public void drawViews()
+    public void DrawViews()
     {
         foreach (IView v in _views)
         {
-            v.draw();
+            v.Draw();
         }
     }
 
-    public void handleMove()
+    public void HandleMove()
     {
 
     }
