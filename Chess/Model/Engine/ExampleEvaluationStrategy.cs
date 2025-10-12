@@ -9,6 +9,6 @@ public class ExampleEvaluationStrategy : IEvaluationStrategy
 
     public int Evaluate(Board board)
     {
-        return 0;
+        throw new NotImplementedException();
     }
 }

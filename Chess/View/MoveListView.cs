@@ -4,7 +4,6 @@ namespace Chess.View;
 
 public class MoveListView : IView
 {
-
     private MoveHistory _moveHistory;
 
     public MoveListView(MoveHistory moveHistory)
@@ -14,6 +13,6 @@ public class MoveListView : IView
 
     public void Draw()
     {
-
+        throw new NotImplementedException();
     }
 }

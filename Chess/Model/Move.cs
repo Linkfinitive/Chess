@@ -23,16 +23,16 @@ public class Move : ICommand
 
     public string GetAlgebraicMove()
     {
-        return "";
+        throw new NotImplementedException();
     }
 
     public void Execute()
     {
-
+        throw new NotImplementedException();
     }
 
     public void Undo()
     {
-
+        throw new NotImplementedException();
     }
 }

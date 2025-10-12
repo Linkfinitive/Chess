@@ -11,8 +11,6 @@ public class Engine
 
     public Move FindBestMove(Board board, int depth)
     {
-        //the below is, naturally, a placeholder to stop the lsp from yelling
-
-        return new Move(new Square(0, 0, PlayerColors.WHITE), new Square(0, 0, PlayerColors.WHITE), new King(PlayerColors.WHITE, new Square(0, 0, PlayerColors.WHITE)));
+        throw new NotImplementedException();
     }
 }

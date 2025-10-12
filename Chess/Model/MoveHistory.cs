@@ -11,11 +11,11 @@ public class MoveHistory
 
     public void AddMove(Move move)
     {
-
+        throw new NotImplementedException();
     }
 
     public void UndoLastMove()
     {
-
+        throw new NotImplementedException();
     }
 }

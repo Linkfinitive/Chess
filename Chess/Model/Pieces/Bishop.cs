@@ -6,6 +6,6 @@ public class Bishop : Piece
 
     public override List<Move> GetLegalMoves()
     {
-        return new List<Move>();
+        throw new NotImplementedException();
     }
 }
