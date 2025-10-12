@@ -1,10 +1,12 @@
 using Chess.Model;
+using SplashKitSDK;
 
 namespace Chess;
 
 public interface IView
 {
     public void Draw();
+    public void HandleClick(Point2D clickLocation);
 }
 
 public interface ICommand

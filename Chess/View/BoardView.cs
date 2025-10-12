@@ -36,6 +36,13 @@ public class BoardView : IView
         foreach (Piece p in pieces)
         {
             (int xPos, int yPos) = CalculatePosition(p.Location);
+
+            if (p.IsPickedUp)
+            {
+                //If the piece is picked up then it should follow the mouse pointer.
+                (xPos, yPos) = ((int)SplashKit.MousePosition().X, (int)(SplashKit.MousePosition().Y));
+            }
+
             Color color = (p.Color == PlayerColors.WHITE) ? Theme.WHITE_PIECE : Theme.BLACK_PIECE;
             Font arial = SplashKit.LoadFont("arial", "Arial");
             SplashKit.DrawText($"{p.GetType().Name}", color, "arial", 12, xPos, yPos);
@@ -51,5 +58,19 @@ public class BoardView : IView
         xPos += GlobalSizes.BOARD_LEFT_OFFSET;
         yPos += GlobalSizes.BOARD_VERTICAL_OFFSET;
         return (xPos, yPos);
+    }
+
+    public void HandleClick(Point2D clickLocation)
+    {
+        foreach (Piece p in _board.Pieces)
+        {
+            (int xPos, int yPos) = CalculatePosition(p.Location);
+
+            if ((xPos < clickLocation.X) && (yPos < clickLocation.Y) && ((xPos + GlobalSizes.BOARD_SQUARE_SIZE) > clickLocation.X) && ((yPos + GlobalSizes.BOARD_SQUARE_SIZE) > clickLocation.Y))
+            {
+                p.IsPickedUp = true;
+            }
+
+        }
     }
 }

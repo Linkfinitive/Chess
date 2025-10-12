@@ -1,6 +1,7 @@
 using Chess.Model;
 using Chess.Model.Engine;
 using Chess.View;
+using SplashKitSDK;
 
 namespace Chess.Controller;
 
@@ -28,13 +29,9 @@ public class GameController
         _views = new List<IView> { boardView, moveListView };
     }
 
-    public void DrawViews()
-    {
-        foreach (IView v in _views)
-        {
-            v.Draw();
-        }
-    }
+    public void DrawViews() { foreach (IView v in _views) { v.Draw(); } }
+
+    public void HandleClick(Point2D clickLocation) { foreach (IView v in _views) { v.HandleClick(clickLocation); } }
 
     public void HandleMove()
     {

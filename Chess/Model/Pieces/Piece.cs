@@ -4,6 +4,7 @@ public abstract class Piece
 {
     public PlayerColors Color { get; }
     public Square Location { get; }
+    public bool IsPickedUp { get; set; }
 
     public Piece(PlayerColors color, Square location)
     {

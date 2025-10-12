@@ -1,19 +1,37 @@
-using static SplashKitSDK.SplashKit;
+using SplashKitSDK;
 using Chess;
 using Chess.Controller;
 
-OpenWindow("Chess", GlobalSizes.WINDOW_WIDTH, GlobalSizes.WINDOW_HEIGHT);
+Window window = new Window("Chess", GlobalSizes.WINDOW_WIDTH, GlobalSizes.WINDOW_HEIGHT);
 GameController controller = new GameController();
-GlobalSizes.PrintFields();
 
 do
 {
-    ProcessEvents();
-    ClearScreen(Theme.BACKGROUND);
+    SplashKit.ProcessEvents();
+    SplashKit.ClearScreen(Theme.BACKGROUND);
 
-    controller.DrawViews();
+    try
+    {
+        controller.DrawViews();
+    }
+    catch (NotImplementedException e)
+    {
+        // Console.WriteLine(e.Message);
+    }
 
-    RefreshScreen();
-} while (!QuitRequested());
+    if (SplashKit.MouseClicked(SplashKitSDK.MouseButton.LeftButton))
+    {
+        try
+        {
+            controller.HandleClick(SplashKit.MousePosition());
+        }
+        catch (NotImplementedException e)
+        {
+            // Console.WriteLine(e.Message);
+        }
+    }
 
-CloseAllWindows();
+    SplashKit.RefreshScreen();
+} while (!window.CloseRequested);
+
+SplashKit.CloseAllWindows();
