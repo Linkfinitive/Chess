@@ -1,5 +1,5 @@
 // Classes
-[GameController|-board: Board;-engine: Engine;-views: List\<IView\>;-playerToMove: PlayerColors;-moveHistory: MoveHistory|+DrawViews(): void;+HandleMove(): void]
+[GameController|-board: Board;-engine: Engine;-views: List\<IView\>;-playerToMove: PlayerColors;-moveHistory: MoveHistory|+DrawViews(): void;+HandleClick(clickLocation: Point2D): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D): void;+HandleMove(): void]
 
 [Board|+Pieces: List\<Piece\> \<\<readonly\>\>;+Squares: List\<Square\> \<\<readonly\>\>]
 
@@ -12,7 +12,7 @@ depth: int): Move;]
 
 [Move|-from: Square;-to: Square;-pieceMoved: Piece;-pieceCaptured: Piece?;-promotion: boolean|+GetAlgebraicMove(): string;]
 
-[<<abstract>>;Piece|+Color: PlayerColors \<\<readonly\>\>;+Location: Square \<\<readonly\>\>|+GetLegalMoves(): List\<Move\>]
+[<<abstract>>;Piece|+Color: PlayerColors \<\<readonly\>\>;+Location: Square \<\<readonly\>\>;+IsPickedUp: bool \<\<readonly\>\>|+GetLegalMoves(): List\<Move\>]
 
 [Piece]^-[Pawn]
 [Piece]^-[Rook]
@@ -21,7 +21,8 @@ depth: int): Move;]
 [Piece]^-[Queen]
 [Piece]^-[King]
 
-[BoardView|-board: Board|+Draw(): void;-DrawSquares(squares: List\<Square\>): void;-DrawPieces(pieces: List\<Piece\>): void;-CalculatePosition(s: Square): (int, int)]
+[BoardView|-board: Board|+Draw(): void;-DrawSquares(squares: List\<Square\>): void;-DrawPieces(pieces: List\<Piece\>): void;-CalculatePosition(s: Square): (int
+int);-SquareIsAt(s: Square, x: int, y: int): bool]
 [MoveListView|-moveHistory: MoveHistory|+Draw(): void]
 
 [IEvaluationStrategy]^-.-[ExampleEvaluationStrategy|+Evaluate(board: Board): int]
@@ -31,7 +32,7 @@ depth: int): Move;]
 
 [<<interface>>;ICommand|+Execute(): void;+Undo(): void]
 
-[<<interface>>;IView|+Draw(): void]
+[<<interface>>;IView|+Draw(): void;+HandleClick(clickLocation: Point2D, controller: GameController): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D, controller: GameController): void]
 
 // Enums
 [<<enumeration>>;PlayerColors|WHITE;BLACK]

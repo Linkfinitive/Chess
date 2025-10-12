@@ -1,5 +1,6 @@
 using SplashKitSDK;
 using Chess.Model;
+using Chess.Controller;
 
 namespace Chess.View;
 
@@ -60,17 +61,51 @@ public class BoardView : IView
         return (xPos, yPos);
     }
 
-    public void HandleClick(Point2D clickLocation)
+    private bool SquareIsAt(Square s, int x, int y)
+    {
+        (int xPos, int yPos) = CalculatePosition(s);
+        if ((xPos < x) && (yPos < y) && ((xPos + GlobalSizes.BOARD_SQUARE_SIZE) > x) && ((yPos + GlobalSizes.BOARD_SQUARE_SIZE) > y))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void HandleClick(Point2D clickLocation, GameController controller) { throw new NotImplementedException(); }
+
+    public void HandleMouseDown(Point2D mouseDownLocation)
     {
         foreach (Piece p in _board.Pieces)
         {
-            (int xPos, int yPos) = CalculatePosition(p.Location);
-
-            if ((xPos < clickLocation.X) && (yPos < clickLocation.Y) && ((xPos + GlobalSizes.BOARD_SQUARE_SIZE) > clickLocation.X) && ((yPos + GlobalSizes.BOARD_SQUARE_SIZE) > clickLocation.Y))
+            if (SquareIsAt(p.Location, (int)mouseDownLocation.X, (int)mouseDownLocation.Y))
             {
                 p.IsPickedUp = true;
+                return;
             }
 
+        }
+    }
+
+    public void HandleMouseUp(Point2D mouseUpLocation, GameController controller)
+    {
+        foreach (Piece p in _board.Pieces)
+        {
+            if (p.IsPickedUp)
+            {
+                Square newLocation;
+
+                foreach (Square s in _board.Squares)
+                {
+                    (int xPos, int yPos) = CalculatePosition(s);
+                    if (SquareIsAt(s, (int)mouseUpLocation.X, (int)mouseUpLocation.Y))
+                    {
+                        newLocation = s;
+                        p.IsPickedUp = false;
+                        controller.HandleMove(p.Location, newLocation, p);
+                        return;
+                    }
+                }
+            }
         }
     }
 }

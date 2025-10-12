@@ -10,27 +10,25 @@ do
     SplashKit.ProcessEvents();
     SplashKit.ClearScreen(Theme.BACKGROUND);
 
+    controller.DrawViews();
     try
     {
-        controller.DrawViews();
-    }
-    catch (NotImplementedException e)
-    {
-        // Console.WriteLine(e.Message);
-    }
+        if (SplashKit.MouseDown(SplashKitSDK.MouseButton.LeftButton))
+        {
+            controller.HandleMouseDown(SplashKit.MousePosition());
+        }
 
-    if (SplashKit.MouseClicked(SplashKitSDK.MouseButton.LeftButton))
-    {
-        try
+        if (SplashKit.MouseUp(SplashKitSDK.MouseButton.LeftButton))
+        {
+            controller.HandleMouseUp(SplashKit.MousePosition());
+        }
+
+        if (SplashKit.MouseClicked(SplashKitSDK.MouseButton.LeftButton))
         {
             controller.HandleClick(SplashKit.MousePosition());
         }
-        catch (NotImplementedException e)
-        {
-            // Console.WriteLine(e.Message);
-        }
     }
-
+    catch (NotImplementedException) { }
     SplashKit.RefreshScreen();
 } while (!window.CloseRequested);
 

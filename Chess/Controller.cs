@@ -31,11 +31,13 @@ public class GameController
 
     public void DrawViews() { foreach (IView v in _views) { v.Draw(); } }
 
-    public void HandleClick(Point2D clickLocation) { foreach (IView v in _views) { v.HandleClick(clickLocation); } }
+    public void HandleClick(Point2D clickLocation) { foreach (IView v in _views) { v.HandleClick(clickLocation, this); } }
+    public void HandleMouseDown(Point2D mouseDownLocation) { foreach (IView v in _views) { v.HandleMouseDown(mouseDownLocation); } }
+    public void HandleMouseUp(Point2D mouseUpLocation) { foreach (IView v in _views) { v.HandleMouseUp(mouseUpLocation, this); } }
 
-    public void HandleMove()
+    public void HandleMove(Square from, Square to, Piece pieceMoved)
     {
-
+        pieceMoved.Location = to;
     }
 
 }
