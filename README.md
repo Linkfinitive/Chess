@@ -9,3 +9,6 @@ Maybe one day there will be a better chess engine here or more capabilities. For
 
 ## Compiled Releases?
 Coming soon.
+
+## UML
+The UML diagram was created using yuml.me. The text can be pasted in to their generator, or the SVG can be accessed [here](https://yuml.me/linkfinitive/chess-program.svg).
