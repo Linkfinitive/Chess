@@ -9,8 +9,6 @@ public static class Theme
     public static Color WHITE_SQUARE = SplashKit.ColorMintCream();
     public static Color BLACK_SQUARE = SplashKit.ColorDarkSeaGreen();
     public static Color BACKGROUND = SplashKit.ColorBisque();
-    public static Color WHITE_PIECE = SplashKit.ColorBlueViolet();
-    public static Color BLACK_PIECE = SplashKit.ColorBlack();
 }
 
 public static class GlobalSizes
