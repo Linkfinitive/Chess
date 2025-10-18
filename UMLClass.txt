@@ -1,5 +1,5 @@
 // Classes
-[GameController|-board: Board;-engine: Engine;-views: List\<IView\>;-playerToMove: PlayerColors;-moveHistory: MoveHistory|+DrawViews(): void;+HandleClick(clickLocation: Point2D): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D): void;+HandleMove(): void;+SetUp(): void;-MakeBitmapSquare(original: Bitmap): Bitmap]
+[GameController|-board: Board;-engine: Engine;-views: List\<IView\> \<\<readonly\>\>;-playerToMove: PlayerColors;-moveHistory: MoveHistory|+DrawViews(): void;+HandleClick(clickLocation: Point2D): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D): void;+HandleMove(): void;+SetUp(): void;-MakeBitmapSquare(original: Bitmap): void]
 
 [Board|+Pieces: List\<Piece\> \<\<readonly\>\>;+Squares: List\<Square\> \<\<readonly\>\>]
 

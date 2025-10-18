@@ -1,6 +1,8 @@
 using SplashKitSDK;
 using Chess.Model;
 using Chess.Controller;
+using Chess.Global;
+using Chess.Model.Pieces;
 
 namespace Chess.View;
 

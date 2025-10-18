@@ -1,3 +1,6 @@
+using Chess.Global;
+using Chess.Model.Pieces;
+
 namespace Chess.Model;
 
 public class Move : ICommand

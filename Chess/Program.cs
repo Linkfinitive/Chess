@@ -1,6 +1,7 @@
 using SplashKitSDK;
 using Chess;
 using Chess.Controller;
+using Chess.Global;
 
 Window window = new Window("Chess", GlobalSizes.WINDOW_WIDTH, GlobalSizes.WINDOW_HEIGHT);
 GameController controller = new GameController();

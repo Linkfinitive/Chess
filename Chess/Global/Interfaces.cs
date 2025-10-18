@@ -2,7 +2,7 @@ using Chess.Model;
 using Chess.Controller;
 using SplashKitSDK;
 
-namespace Chess;
+namespace Chess.Global;
 
 public interface IView
 {

@@ -1,7 +1,7 @@
 using System.Reflection;
 using SplashKitSDK;
 
-namespace Chess;
+namespace Chess.Global;
 
 public static class Theme
 {
@@ -15,7 +15,7 @@ public static class GlobalSizes
 {
     //Keeps the window in the same aspect ratio (16:9), but the size can be adjusted depending on display resolution.
     public static int WINDOW_WIDTH = 1280;
-    public static int WINDOW_HEIGHT = (int)(WINDOW_WIDTH * ((double)9 / (double)16));
+    public static int WINDOW_HEIGHT = (int)(WINDOW_WIDTH * (9 / (double)16));
 
     public static int BOARD_SIZE = (int)(WINDOW_WIDTH / (double)2);
     public static int BOARD_SQUARE_SIZE = (int)(BOARD_SIZE / (double)8);

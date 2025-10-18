@@ -1,3 +1,5 @@
+using Chess.Global;
+
 namespace Chess.Model.Engine;
 
 public class Engine

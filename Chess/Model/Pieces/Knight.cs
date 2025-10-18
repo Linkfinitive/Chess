@@ -1,4 +1,6 @@
-namespace Chess.Model;
+using Chess.Global;
+
+namespace Chess.Model.Pieces;
 
 public class Knight : Piece
 {

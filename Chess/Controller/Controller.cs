@@ -1,6 +1,8 @@
+using Chess.Global;
 using Chess.Model;
 using Chess.Model.Engine;
 using Chess.View;
+using Chess.Model.Pieces;
 using SplashKitSDK;
 
 namespace Chess.Controller;
@@ -12,7 +14,7 @@ public class GameController
     private Board _board;
     private MoveHistory _moveHistory;
 
-    private List<IView> _views;
+    private readonly List<IView> _views;
     private PlayerColors _playerToMove;
 
     public GameController()
@@ -42,24 +44,24 @@ public class GameController
 
     public void SetUp()
     {
-        Font arial = SplashKit.LoadFont("arial", "Arial");
+        SplashKit.LoadFont("arial", "Arial");
 
-        Bitmap BishopBlack = MakeBitmapSquare(SplashKit.LoadBitmap("BishopBlack", "Bishop-Black.bmp"));
-        Bitmap KingBlack = MakeBitmapSquare(SplashKit.LoadBitmap("KingBlack", "King-Black.bmp"));
-        Bitmap KnightBlack = MakeBitmapSquare(SplashKit.LoadBitmap("KnightBlack", "Knight-Black.bmp"));
-        Bitmap PawnBlack = MakeBitmapSquare(SplashKit.LoadBitmap("PawnBlack", "Pawn-Black.bmp"));
-        Bitmap QueenBlack = MakeBitmapSquare(SplashKit.LoadBitmap("QueenBlack", "Queen-Black.bmp"));
-        Bitmap RookBlack = MakeBitmapSquare(SplashKit.LoadBitmap("RookBlack", "Rook-Black.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("BishopBlack", "Bishop-Black.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("KingBlack", "King-Black.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("KnightBlack", "Knight-Black.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("PawnBlack", "Pawn-Black.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("QueenBlack", "Queen-Black.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("RookBlack", "Rook-Black.bmp"));
 
-        Bitmap BishopWhite = MakeBitmapSquare(SplashKit.LoadBitmap("BishopWhite", "Bishop-White.bmp"));
-        Bitmap KingWhite = MakeBitmapSquare(SplashKit.LoadBitmap("KingWhite", "King-White.bmp"));
-        Bitmap KnightWhite = MakeBitmapSquare(SplashKit.LoadBitmap("KnightWhite", "Knight-White.bmp"));
-        Bitmap PawnWhite = MakeBitmapSquare(SplashKit.LoadBitmap("PawnWhite", "Pawn-White.bmp"));
-        Bitmap QueenWhite = MakeBitmapSquare(SplashKit.LoadBitmap("QueenWhite", "Queen-White.bmp"));
-        Bitmap RookWhite = MakeBitmapSquare(SplashKit.LoadBitmap("RookWhite", "Rook-White.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("BishopWhite", "Bishop-White.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("KingWhite", "King-White.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("KnightWhite", "Knight-White.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("PawnWhite", "Pawn-White.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("QueenWhite", "Queen-White.bmp"));
+        MakeBitmapSquare(SplashKit.LoadBitmap("RookWhite", "Rook-White.bmp"));
     }
 
-    private static Bitmap MakeBitmapSquare(Bitmap original)
+    private static void MakeBitmapSquare(Bitmap original)
     {
         int size = Math.Max(original.Width, original.Height);
         Bitmap square = SplashKit.CreateBitmap($"{SplashKit.BitmapName(original)}-Square", size, size);
@@ -67,7 +69,5 @@ public class GameController
         int x = (size - original.Width) / 2;
         int y = (size - original.Height) / 2;
         SplashKit.DrawBitmapOnBitmap(square, original, x, y);
-
-        return square;
     }
 }

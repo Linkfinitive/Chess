@@ -1,5 +1,6 @@
 using Chess.Model;
 using Chess.Controller;
+using Chess.Global;
 using SplashKitSDK;
 
 namespace Chess.View;
