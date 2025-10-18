@@ -44,22 +44,22 @@ public class GameController
     {
         Font arial = SplashKit.LoadFont("arial", "Arial");
 
-        Bitmap BishopBlack = MakeBitmapSquare(SplashKit.LoadBitmap("BishopBlack", $"Bishop-Black.bmp"));
-        Bitmap KingBlack = MakeBitmapSquare(SplashKit.LoadBitmap("KingBlack", $"King-Black.bmp"));
-        Bitmap KnightBlack = MakeBitmapSquare(SplashKit.LoadBitmap("KnightBlack", $"Knight-Black.bmp"));
-        Bitmap PawnBlack = MakeBitmapSquare(SplashKit.LoadBitmap("PawnBlack", $"Pawn-Black.bmp"));
-        Bitmap QueenBlack = MakeBitmapSquare(SplashKit.LoadBitmap("QueenBlack", $"Queen-Black.bmp"));
-        Bitmap RookBlack = MakeBitmapSquare(SplashKit.LoadBitmap("RookBlack", $"Rook-Black.bmp"));
+        Bitmap BishopBlack = MakeBitmapSquare(SplashKit.LoadBitmap("BishopBlack", "Bishop-Black.bmp"));
+        Bitmap KingBlack = MakeBitmapSquare(SplashKit.LoadBitmap("KingBlack", "King-Black.bmp"));
+        Bitmap KnightBlack = MakeBitmapSquare(SplashKit.LoadBitmap("KnightBlack", "Knight-Black.bmp"));
+        Bitmap PawnBlack = MakeBitmapSquare(SplashKit.LoadBitmap("PawnBlack", "Pawn-Black.bmp"));
+        Bitmap QueenBlack = MakeBitmapSquare(SplashKit.LoadBitmap("QueenBlack", "Queen-Black.bmp"));
+        Bitmap RookBlack = MakeBitmapSquare(SplashKit.LoadBitmap("RookBlack", "Rook-Black.bmp"));
 
-        Bitmap BishopWhite = MakeBitmapSquare(SplashKit.LoadBitmap("BishopWhite", $"Bishop-White.bmp"));
-        Bitmap KingWhite = MakeBitmapSquare(SplashKit.LoadBitmap("KingWhite", $"King-White.bmp"));
-        Bitmap KnightWhite = MakeBitmapSquare(SplashKit.LoadBitmap("KnightWhite", $"Knight-White.bmp"));
-        Bitmap PawnWhite = MakeBitmapSquare(SplashKit.LoadBitmap("PawnWhite", $"Pawn-White.bmp"));
-        Bitmap QueenWhite = MakeBitmapSquare(SplashKit.LoadBitmap("QueenWhite", $"Queen-White.bmp"));
-        Bitmap RookWhite = MakeBitmapSquare(SplashKit.LoadBitmap("RookWhite", $"Rook-White.bmp"));
+        Bitmap BishopWhite = MakeBitmapSquare(SplashKit.LoadBitmap("BishopWhite", "Bishop-White.bmp"));
+        Bitmap KingWhite = MakeBitmapSquare(SplashKit.LoadBitmap("KingWhite", "King-White.bmp"));
+        Bitmap KnightWhite = MakeBitmapSquare(SplashKit.LoadBitmap("KnightWhite", "Knight-White.bmp"));
+        Bitmap PawnWhite = MakeBitmapSquare(SplashKit.LoadBitmap("PawnWhite", "Pawn-White.bmp"));
+        Bitmap QueenWhite = MakeBitmapSquare(SplashKit.LoadBitmap("QueenWhite", "Queen-White.bmp"));
+        Bitmap RookWhite = MakeBitmapSquare(SplashKit.LoadBitmap("RookWhite", "Rook-White.bmp"));
     }
 
-    private Bitmap MakeBitmapSquare(Bitmap original)
+    private static Bitmap MakeBitmapSquare(Bitmap original)
     {
         int size = Math.Max(original.Width, original.Height);
         Bitmap square = SplashKit.CreateBitmap($"{SplashKit.BitmapName(original)}-Square", size, size);
