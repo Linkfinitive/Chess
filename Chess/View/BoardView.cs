@@ -36,17 +36,24 @@ public class BoardView : IView
     {
         foreach (Piece p in pieces)
         {
-            (int xPos, int yPos) = CalculatePosition(p.Location);
+            (double xPos, double yPos) = CalculatePosition(p.Location);
+            xPos -= 2.7 * GlobalSizes.BOARD_SQUARE_SIZE;
+            yPos -= 2.7 * GlobalSizes.BOARD_SQUARE_SIZE;
 
             if (p.IsPickedUp)
             {
                 //If the piece is picked up then it should follow the mouse pointer.
                 (xPos, yPos) = ((int)SplashKit.MousePosition().X, (int)(SplashKit.MousePosition().Y));
+                xPos -= 3.2 * GlobalSizes.BOARD_SQUARE_SIZE;
+                yPos -= 3.2 * GlobalSizes.BOARD_SQUARE_SIZE;
             }
 
-            Color color = (p.Color == PlayerColors.WHITE) ? Theme.WHITE_PIECE : Theme.BLACK_PIECE;
-            Font arial = SplashKit.LoadFont("arial", "Arial");
-            SplashKit.DrawText($"{p.GetType().Name}", color, "arial", 12, xPos, yPos);
+            string color = (p.Color == PlayerColors.WHITE) ? "White" : "Black";
+
+            DrawingOptions options = SplashKit.OptionDefaults();
+            options.ScaleX = 0.1f;
+            options.ScaleY = 0.1f;
+            SplashKit.DrawBitmap(SplashKit.BitmapNamed($"{p.GetType().Name}{color}-Square"), xPos, yPos, options);
 
         }
     }

@@ -1,12 +1,12 @@
 // Classes
-[GameController|-board: Board;-engine: Engine;-views: List\<IView\>;-playerToMove: PlayerColors;-moveHistory: MoveHistory|+DrawViews(): void;+HandleClick(clickLocation: Point2D): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D): void;+HandleMove(): void]
+[GameController|-board: Board;-engine: Engine;-views: List\<IView\>;-playerToMove: PlayerColors;-moveHistory: MoveHistory|+DrawViews(): void;+HandleClick(clickLocation: Point2D): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D): void;+HandleMove(): void;+SetUp(): void;-MakeBitmapSquare(original: Bitmap): Bitmap]
 
 [Board|+Pieces: List\<Piece\> \<\<readonly\>\>;+Squares: List\<Square\> \<\<readonly\>\>]
 
 [Square|+Color: PlayerColors \<\<readonly\>\>;+Rank: int \<\<readonly\>\>;+File: int \<\<readonly\>\>|+GetAlgebraicPosition(): string]
 
 [Engine|-evaluationStrategy: IEvaluationStrategy|+FindBestMove(board: Board
-depth: int): Move;]
+depth: int): Move]
 
 [MoveHistory|-moves: Stack\<Move\>|+AddMove(move: Move): void;+UndoLastMove(): void]
 
@@ -22,7 +22,9 @@ depth: int): Move;]
 [Piece]^-[King]
 
 [BoardView|-board: Board|+Draw(): void;-DrawSquares(squares: List\<Square\>): void;-DrawPieces(pieces: List\<Piece\>): void;-CalculatePosition(s: Square): (int
-int);-SquareIsAt(s: Square, x: int, y: int): bool]
+int);-SquareIsAt(s: Square
+x: int
+y: int): bool]
 [MoveListView|-moveHistory: MoveHistory|+Draw(): void]
 
 [IEvaluationStrategy]^-.-[ExampleEvaluationStrategy|+Evaluate(board: Board): int]
@@ -32,7 +34,9 @@ int);-SquareIsAt(s: Square, x: int, y: int): bool]
 
 [<<interface>>;ICommand|+Execute(): void;+Undo(): void]
 
-[<<interface>>;IView|+Draw(): void;+HandleClick(clickLocation: Point2D, controller: GameController): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D, controller: GameController): void]
+[<<interface>>;IView|+Draw(): void;+HandleClick(clickLocation: Point2D
+controller: GameController): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D
+controller: GameController): void]
 
 // Enums
 [<<enumeration>>;PlayerColors|WHITE;BLACK]

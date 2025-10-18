@@ -4,6 +4,7 @@ using Chess.Controller;
 
 Window window = new Window("Chess", GlobalSizes.WINDOW_WIDTH, GlobalSizes.WINDOW_HEIGHT);
 GameController controller = new GameController();
+controller.SetUp();
 
 do
 {
