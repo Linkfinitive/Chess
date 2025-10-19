@@ -4,27 +4,20 @@ namespace Chess.Model;
 
 public class Square
 {
-    public PlayerColors Color { get; }
-    public int Rank { get; }
-    public int File { get; }
-
     public Square(int rank, int file, PlayerColors color)
     {
+        if (rank < 0 || rank > 7) throw new ArgumentOutOfRangeException(nameof(rank), "Rank must be between 0 and 7 inclusive.");
 
-        if (rank < 0 || rank > 7)
-        {
-            throw new ArgumentOutOfRangeException(nameof(rank), "Rank must be between 0 and 7 inclusive.");
-        }
-
-        if (file < 0 || file > 7)
-        {
-            throw new ArgumentOutOfRangeException(nameof(file), "File must be between 0 and 7 inclusive.");
-        }
+        if (file < 0 || file > 7) throw new ArgumentOutOfRangeException(nameof(file), "File must be between 0 and 7 inclusive.");
 
         Color = color;
         Rank = rank;
         File = file;
     }
+
+    public PlayerColors Color { get; }
+    public int Rank { get; }
+    public int File { get; }
 
     public string GetAlgebraicPosition()
     {
@@ -60,6 +53,7 @@ public class Square
             default:
                 throw new ArgumentOutOfRangeException(nameof(File), "File must be between 0 and 7 inclusive.");
         }
+
         return $"{algebraicFile}{algebraicRank}";
     }
 }

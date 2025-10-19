@@ -1,20 +1,18 @@
 using Chess.Global;
 using Chess.Model;
 using Chess.Model.Engine;
-using Chess.View;
 using Chess.Model.Pieces;
+using Chess.View;
 using SplashKitSDK;
 
 namespace Chess.Controller;
 
 public class GameController
 {
-    private Engine _engine;
-
-    private Board _board;
-    private MoveHistory _moveHistory;
-
+    private readonly Board _board;
+    private readonly MoveHistory _moveHistory;
     private readonly List<IView> _views;
+    private Engine _engine;
     private PlayerColors _playerToMove;
 
     public GameController()
@@ -31,15 +29,45 @@ public class GameController
         _views = new List<IView> { boardView, moveListView };
     }
 
-    public void DrawViews() { foreach (IView v in _views) { v.Draw(); } }
-
-    public void HandleClick(Point2D clickLocation) { foreach (IView v in _views) { v.HandleClick(clickLocation, this); } }
-    public void HandleMouseDown(Point2D mouseDownLocation) { foreach (IView v in _views) { v.HandleMouseDown(mouseDownLocation); } }
-    public void HandleMouseUp(Point2D mouseUpLocation) { foreach (IView v in _views) { v.HandleMouseUp(mouseUpLocation, this); } }
-
-    public void HandleMove(Square from, Square to, Piece pieceMoved)
+    public bool PiecePickedUp
     {
-        pieceMoved.Location = to;
+        get
+        {
+            foreach (Piece p in _board.Pieces)
+                if (p.IsPickedUp)
+                    return true;
+
+            return false;
+        }
+    }
+
+    public void DrawViews()
+    {
+        foreach (IView v in _views) v.Draw();
+    }
+
+    public void HandleClick(Point2D clickLocation)
+    {
+        foreach (IView v in _views) v.HandleClick(clickLocation, this);
+    }
+
+    public void HandleMouseDown(Point2D mouseDownLocation)
+    {
+        foreach (IView v in _views) v.HandleMouseDown(mouseDownLocation, this);
+    }
+
+    public void HandleMouseUp(Point2D mouseUpLocation)
+    {
+        foreach (IView v in _views) v.HandleMouseUp(mouseUpLocation, this);
+    }
+
+    public void HandleMove(Square to, Piece pieceMoved)
+    {
+        List<Move> legalMoves = pieceMoved.GetLegalMoves(_board);
+        Move? newMove = legalMoves.Find(m => m.To == to);
+        if (newMove is null) return;
+        _moveHistory.AddMove(newMove);
+        newMove.Execute();
     }
 
     public void SetUp()

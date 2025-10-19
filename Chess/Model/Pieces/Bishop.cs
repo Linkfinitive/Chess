@@ -4,9 +4,11 @@ namespace Chess.Model.Pieces;
 
 public class Bishop : Piece
 {
-    public Bishop(PlayerColors color, Square location) : base(color, location) { }
+    public Bishop(PlayerColors color, Square location) : base(color, location)
+    {
+    }
 
-    public override List<Move> GetLegalMoves()
+    public override List<Move> GetLegalMoves(Board board)
     {
         throw new NotImplementedException();
     }

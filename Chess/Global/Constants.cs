@@ -29,9 +29,6 @@ public static class GlobalSizes
     {
         FieldInfo[] fields = typeof(GlobalSizes).GetFields();
 
-        foreach (FieldInfo field in fields)
-        {
-            Console.WriteLine($"{field.Name} = {field.GetValue(null)}");
-        }
+        foreach (FieldInfo field in fields) Console.WriteLine($"{field.Name} = {field.GetValue(null)}");
     }
 }

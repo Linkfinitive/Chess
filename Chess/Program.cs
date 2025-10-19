@@ -1,7 +1,6 @@
-using SplashKitSDK;
-using Chess;
 using Chess.Controller;
 using Chess.Global;
+using SplashKitSDK;
 
 Window window = new Window("Chess", GlobalSizes.WINDOW_WIDTH, GlobalSizes.WINDOW_HEIGHT);
 GameController controller = new GameController();
@@ -15,22 +14,16 @@ do
     controller.DrawViews();
     try
     {
-        if (SplashKit.MouseDown(SplashKitSDK.MouseButton.LeftButton))
-        {
-            controller.HandleMouseDown(SplashKit.MousePosition());
-        }
+        if (SplashKit.MouseDown(MouseButton.LeftButton)) controller.HandleMouseDown(SplashKit.MousePosition());
 
-        if (SplashKit.MouseUp(SplashKitSDK.MouseButton.LeftButton))
-        {
-            controller.HandleMouseUp(SplashKit.MousePosition());
-        }
+        if (SplashKit.MouseUp(MouseButton.LeftButton)) controller.HandleMouseUp(SplashKit.MousePosition());
 
-        if (SplashKit.MouseClicked(SplashKitSDK.MouseButton.LeftButton))
-        {
-            controller.HandleClick(SplashKit.MousePosition());
-        }
+        if (SplashKit.MouseClicked(MouseButton.LeftButton)) controller.HandleClick(SplashKit.MousePosition());
     }
-    catch (NotImplementedException) { }
+    catch (NotImplementedException)
+    {
+    }
+
     SplashKit.RefreshScreen();
 } while (!window.CloseRequested);
 

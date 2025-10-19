@@ -1,5 +1,5 @@
 // Classes
-[GameController|-board: Board;-engine: Engine;-views: List\<IView\> \<\<readonly\>\>;-playerToMove: PlayerColors;-moveHistory: MoveHistory|+DrawViews(): void;+HandleClick(clickLocation: Point2D): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D): void;+HandleMove(): void;+SetUp(): void;-MakeBitmapSquare(original: Bitmap): void]
+[GameController|-board: Board;-engine: Engine;-views: List\<IView\> \<\<readonly\>\>;-playerToMove: PlayerColors;-moveHistory: MoveHistory;+PiecePickedUp: bool \<\<readonly\>\>|+DrawViews(): void;+HandleClick(clickLocation: Point2D): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D): void;+HandleMove(): void;+SetUp(): void;-MakeBitmapSquare(original: Bitmap): void]
 
 [Board|+Pieces: List\<Piece\> \<\<readonly\>\>;+Squares: List\<Square\> \<\<readonly\>\>]
 
@@ -10,7 +10,7 @@ depth: int): Move]
 
 [MoveHistory|-moves: Stack\<Move\>|+AddMove(move: Move): void;+UndoLastMove(): void]
 
-[Move|-from: Square;-to: Square;-pieceMoved: Piece;-pieceCaptured: Piece?;-promotion: boolean|+GetAlgebraicMove(): string;]
+[Move|-from: Square;+To: Square \<\<readonly\>\>;-pieceMoved: Piece;-pieceCaptured: Piece?;-promotion: boolean|+GetAlgebraicMove(): string;]
 
 [<<abstract>>;Piece|+Color: PlayerColors \<\<readonly\>\>;+Location: Square \<\<readonly\>\>;+IsPickedUp: bool \<\<readonly\>\>|+GetLegalMoves(): List\<Move\>]
 
@@ -34,8 +34,7 @@ y: int): bool]
 
 [<<interface>>;ICommand|+Execute(): void;+Undo(): void]
 
-[<<interface>>;IView|+Draw(): void;+HandleClick(clickLocation: Point2D
-controller: GameController): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D
+[<<interface>>;IView|+Draw(): void;+HandleClick(clickLocation: Point2D, controller: GameController): void;+HandleMouseDown(mouseDownLoaction: Point2D, controller: GameController): void;+HandleMouseUp(mouseUpLocation: Point2D,
 controller: GameController): void]
 
 // Enums
@@ -44,7 +43,7 @@ controller: GameController): void]
 //Globals
 [<<static>>;GlobalSizes|+WINDOW_HEIGHT: int;+WINDOW_WIDTH: int;+BOARD_SIZE: int;+BOARD_SQUARE_SIZE: int;+BOARD_VERTICAL_OFFSET: int;+BOARD_LEFT_OFFSET: int|+PrintFields(): void]
 
-[<<static>>;Theme|+WHITE_SQUARE: Color;+BLACK_SQUARE: Color;+BACKGROUND: Color;+WHITE_PIECE: Color;+BLACK_PIECE: Color]
+[<<static>>;Theme|+WHITE_SQUARE: Color;+BLACK_SQUARE: Color;+BACKGROUND: Color]
 
 // Connections
 [GameController]+->[MoveHistory]

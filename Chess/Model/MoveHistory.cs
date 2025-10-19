@@ -2,7 +2,7 @@ namespace Chess.Model;
 
 public class MoveHistory
 {
-    private Stack<Move> _moves;
+    private readonly Stack<Move> _moves;
 
     public MoveHistory()
     {
@@ -11,11 +11,12 @@ public class MoveHistory
 
     public void AddMove(Move move)
     {
-        throw new NotImplementedException();
+        _moves.Push(move);
     }
 
     public void UndoLastMove()
     {
-        throw new NotImplementedException();
+        Move move = _moves.Pop();
+        move.Undo();
     }
 }

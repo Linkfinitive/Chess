@@ -5,9 +5,6 @@ namespace Chess.Model;
 
 public class Board
 {
-    public List<Piece> Pieces { get; }
-    public List<Square> Squares { get; }
-
     public Board()
     {
         Squares = new List<Square>();
@@ -18,7 +15,7 @@ public class Board
         {
             int rankToAdd = (int)Math.Floor((double)i / 8);
             int fileToAdd = i % 8;
-            PlayerColors colorToAdd = ((rankToAdd + fileToAdd) % 2 == 0) ? PlayerColors.BLACK : PlayerColors.WHITE;
+            PlayerColors colorToAdd = (rankToAdd + fileToAdd) % 2 == 0 ? PlayerColors.BLACK : PlayerColors.WHITE;
 
             Squares.Add(new Square(rankToAdd, fileToAdd, colorToAdd));
         }
@@ -41,7 +38,7 @@ public class Board
         Pieces.Add(new Pawn(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "g2")!));
         Pieces.Add(new Pawn(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "h2")!));
 
-        //Add black's pieces
+        // //Add black's pieces
         Pieces.Add(new Rook(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "a8")!));
         Pieces.Add(new Knight(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "b8")!));
         Pieces.Add(new Bishop(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "c8")!));
@@ -59,4 +56,7 @@ public class Board
         Pieces.Add(new Pawn(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "g7")!));
         Pieces.Add(new Pawn(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "h7")!));
     }
+
+    public List<Piece> Pieces { get; }
+    public List<Square> Squares { get; }
 }

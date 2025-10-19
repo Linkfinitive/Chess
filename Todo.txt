@@ -1,1 +1,0 @@
-Change the piece location field back to GET only, it's only got SET for testing.
