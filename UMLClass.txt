@@ -14,12 +14,15 @@ depth: int): Move]
 
 [<<abstract>>;Piece|+Color: PlayerColors \<\<readonly\>\>;+Location: Square \<\<readonly\>\>;+IsPickedUp: bool \<\<readonly\>\>|+GetLegalMoves(): List\<Move\>]
 
+[<<abstract>>;SlidingPiece|#GetLegalSlidingMoves(xDirections: int［］, yDirections: int［］): List\<Move\>]
+
+[Piece]^-[SlidingPiece]
 [Piece]^-[Pawn]
-[Piece]^-[Rook]
+[SlidingPiece]^-[Rook]
 [Piece]^-[Knight]
-[Piece]^-[Bishop]
-[Piece]^-[Queen]
-[Piece]^-[King]
+[SlidingPiece]^-[Bishop]
+[SlidingPiece]^-[Queen]
+[SlidingPiece]^-[King]
 
 [BoardView|+Draw(): void;-DrawSquares(): void;-DrawPieces(): void;-CalculatePosition(s: Square): (int
 int);-SquareIsAt(s: Square
