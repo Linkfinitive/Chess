@@ -22,7 +22,7 @@ depth: int): Move]
 [Piece]^-[Knight]
 [SlidingPiece]^-[Bishop]
 [SlidingPiece]^-[Queen]
-[SlidingPiece]^-[King]
+[Piece]^-[King]
 
 [BoardView|+Draw(): void;-DrawSquares(): void;-DrawPieces(): void;-CalculatePosition(s: Square): (int
 int);-SquareIsAt(s: Square

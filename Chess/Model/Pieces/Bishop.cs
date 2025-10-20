@@ -2,7 +2,7 @@ using Chess.Global;
 
 namespace Chess.Model.Pieces;
 
-public class Bishop : Piece
+public class Bishop : SlidingPiece
 {
     public Bishop(PlayerColors color, Square location) : base(color, location)
     {
@@ -10,6 +10,9 @@ public class Bishop : Piece
 
     public override List<Move> GetLegalMoves()
     {
-        throw new NotImplementedException();
+        int[] xDirections = new[] { 1, -1, 1, -1 };
+        int[] yDirections = new[] { 1, 1, -1, -1 };
+
+        return GetLegalSlidingMoves(xDirections, yDirections);
     }
 }
