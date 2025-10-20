@@ -9,31 +9,35 @@ namespace Chess.Controller;
 
 public class GameController
 {
-    private readonly Board _board;
     private readonly MoveHistory _moveHistory;
     private readonly List<IView> _views;
     private Engine _engine;
     private PlayerColors _playerToMove;
 
-    public GameController()
+    private GameController()
     {
         _engine = new Engine();
 
-        _board = new Board();
+        Board = new Board();
         _moveHistory = new MoveHistory();
 
         _playerToMove = PlayerColors.WHITE;
 
-        BoardView boardView = new BoardView(_board);
+        BoardView boardView = new BoardView();
         MoveListView moveListView = new MoveListView(_moveHistory);
         _views = new List<IView> { boardView, moveListView };
     }
+
+    public Board Board { get; }
+
+    public static GameController Instance { get; } = new GameController();
+
 
     public bool PiecePickedUp
     {
         get
         {
-            foreach (Piece p in _board.Pieces)
+            foreach (Piece p in Board.Pieces)
                 if (p.IsPickedUp)
                     return true;
 
@@ -48,22 +52,22 @@ public class GameController
 
     public void HandleClick(Point2D clickLocation)
     {
-        foreach (IView v in _views) v.HandleClick(clickLocation, this);
+        foreach (IView v in _views) v.HandleClick(clickLocation);
     }
 
     public void HandleMouseDown(Point2D mouseDownLocation)
     {
-        foreach (IView v in _views) v.HandleMouseDown(mouseDownLocation, this);
+        foreach (IView v in _views) v.HandleMouseDown(mouseDownLocation);
     }
 
     public void HandleMouseUp(Point2D mouseUpLocation)
     {
-        foreach (IView v in _views) v.HandleMouseUp(mouseUpLocation, this);
+        foreach (IView v in _views) v.HandleMouseUp(mouseUpLocation);
     }
 
     public void HandleMove(Square to, Piece pieceMoved)
     {
-        List<Move> legalMoves = pieceMoved.GetLegalMoves(_board);
+        List<Move> legalMoves = pieceMoved.GetLegalMoves();
         Move? newMove = legalMoves.Find(m => m.To == to);
         if (newMove is null) return;
         _moveHistory.AddMove(newMove);
@@ -97,5 +101,10 @@ public class GameController
         int x = (size - original.Width) / 2;
         int y = (size - original.Height) / 2;
         SplashKit.DrawBitmapOnBitmap(square, original, x, y);
+    }
+
+    public void HandleCapture(Piece pieceCaptured)
+    {
+        Board.Pieces.Remove(pieceCaptured);
     }
 }

@@ -8,7 +8,7 @@ public class King : Piece
     {
     }
 
-    public override List<Move> GetLegalMoves(Board board)
+    public override List<Move> GetLegalMoves()
     {
         throw new NotImplementedException();
     }

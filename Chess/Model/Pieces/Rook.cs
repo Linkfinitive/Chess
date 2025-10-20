@@ -1,3 +1,4 @@
+using Chess.Controller;
 using Chess.Global;
 
 namespace Chess.Model.Pieces;
@@ -8,7 +9,7 @@ public class Rook : Piece
     {
     }
 
-    public override List<Move> GetLegalMoves(Board board)
+    public override List<Move> GetLegalMoves()
     {
         List<Move> legalMoves = new List<Move>();
 
@@ -24,7 +25,7 @@ public class Rook : Piece
                 rank += dx[direction];
                 file += dy[direction];
 
-                Piece? pieceInWay = board.Pieces.Find(p => p.Location.File == file && p.Location.Rank == rank);
+                Piece? pieceInWay = GameController.Instance.Board.Pieces.Find(p => p.Location.File == file && p.Location.Rank == rank);
                 if (pieceInWay is not null && pieceInWay.Color == Color) break;
 
                 if (pieceInWay is not null && pieceInWay.Color != Color)
@@ -33,10 +34,11 @@ public class Rook : Piece
                     break;
                 }
 
-                Square? newLocation = board.Squares.Find(s => s.File == file && s.Rank == rank);
+                Square? newLocation = GameController.Instance.Board.Squares.Find(s => s.File == file && s.Rank == rank);
                 if (newLocation is not null) legalMoves.Add(new Move(Location, newLocation, this, null));
             }
         }
+
         return legalMoves;
     }
 }

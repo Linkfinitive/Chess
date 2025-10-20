@@ -8,53 +8,46 @@ namespace Chess.View;
 
 public class BoardView : IView
 {
-    private readonly Board _board;
-
-    public BoardView(Board board)
-    {
-        _board = board;
-    }
-
     public void Draw()
     {
-        DrawBoard(_board.Squares);
-        DrawPieces(_board.Pieces);
+        DrawBoard();
+        DrawPieces();
     }
 
-    public void HandleClick(Point2D clickLocation, GameController controller)
+    public void HandleClick(Point2D clickLocation)
     {
         throw new NotImplementedException();
     }
 
-    public void HandleMouseDown(Point2D mouseDownLocation, GameController controller)
+    public void HandleMouseDown(Point2D mouseDownLocation)
     {
-        if (controller.PiecePickedUp) return;
+        if (GameController.Instance.PiecePickedUp) return;
 
-        foreach (Piece p in _board.Pieces)
+        foreach (Piece p in GameController.Instance.Board.Pieces)
             if (SquareIsAt(p.Location, (int)mouseDownLocation.X, (int)mouseDownLocation.Y))
                 p.IsPickedUp = true;
     }
 
-    public void HandleMouseUp(Point2D mouseUpLocation, GameController controller)
+    public void HandleMouseUp(Point2D mouseUpLocation)
     {
-        foreach (Piece p in _board.Pieces)
+        foreach (Piece p in GameController.Instance.Board.Pieces)
             if (p.IsPickedUp)
             {
-                foreach (Square s in _board.Squares)
+                foreach (Square s in GameController.Instance.Board.Squares)
                     if (SquareIsAt(s, (int)mouseUpLocation.X, (int)mouseUpLocation.Y))
                     {
                         Square newLocation = s;
                         p.IsPickedUp = false;
-                        controller.HandleMove(newLocation, p);
+                        GameController.Instance.HandleMove(newLocation, p);
                     }
 
                 p.IsPickedUp = false;
             }
     }
 
-    private void DrawBoard(List<Square> squares)
+    private void DrawBoard()
     {
-        foreach (Square s in squares)
+        foreach (Square s in GameController.Instance.Board.Squares)
         {
             (int xPos, int yPos) = CalculatePosition(s);
 
@@ -64,9 +57,9 @@ public class BoardView : IView
         }
     }
 
-    private void DrawPieces(List<Piece> pieces)
+    private void DrawPieces()
     {
-        foreach (Piece p in pieces)
+        foreach (Piece p in GameController.Instance.Board.Pieces)
         {
             (double xPos, double yPos) = CalculatePosition(p.Location);
             xPos -= 2.7 * GlobalSizes.BOARD_SQUARE_SIZE;
@@ -102,8 +95,6 @@ public class BoardView : IView
     private bool SquareIsAt(Square s, int x, int y)
     {
         (int xPos, int yPos) = CalculatePosition(s);
-        if (xPos < x && yPos < y && xPos + GlobalSizes.BOARD_SQUARE_SIZE > x && yPos + GlobalSizes.BOARD_SQUARE_SIZE > y) return true;
-
-        return false;
+        return xPos < x && yPos < y && xPos + GlobalSizes.BOARD_SQUARE_SIZE > x && yPos + GlobalSizes.BOARD_SQUARE_SIZE > y;
     }
 }

@@ -1,5 +1,5 @@
 // Classes
-[GameController|-board: Board;-engine: Engine;-views: List\<IView\> \<\<readonly\>\>;-playerToMove: PlayerColors;-moveHistory: MoveHistory;+PiecePickedUp: bool \<\<readonly\>\>|+DrawViews(): void;+HandleClick(clickLocation: Point2D): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D): void;+HandleMove(): void;+SetUp(): void;-MakeBitmapSquare(original: Bitmap): void]
+[GameController|+Instance: GameController \<\<readonly\>\>;Board: Board \<\<readonly\>\>;-engine: Engine;-views: List\<IView\> \<\<readonly\>\>;-playerToMove: PlayerColors;-moveHistory: MoveHistory;+PiecePickedUp: bool \<\<readonly\>\>|+DrawViews(): void;+HandleClick(clickLocation: Point2D): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D): void;+HandleMove(): void;+SetUp(): void;-MakeBitmapSquare(original: Bitmap): void;+HandleCapture(Piece pieceToCapture): void]
 
 [Board|+Pieces: List\<Piece\> \<\<readonly\>\>;+Squares: List\<Square\> \<\<readonly\>\>]
 
@@ -21,7 +21,7 @@ depth: int): Move]
 [Piece]^-[Queen]
 [Piece]^-[King]
 
-[BoardView|-board: Board|+Draw(): void;-DrawSquares(squares: List\<Square\>): void;-DrawPieces(pieces: List\<Piece\>): void;-CalculatePosition(s: Square): (int
+[BoardView|+Draw(): void;-DrawSquares(): void;-DrawPieces(): void;-CalculatePosition(s: Square): (int
 int);-SquareIsAt(s: Square
 x: int
 y: int): bool]
@@ -34,8 +34,7 @@ y: int): bool]
 
 [<<interface>>;ICommand|+Execute(): void;+Undo(): void]
 
-[<<interface>>;IView|+Draw(): void;+HandleClick(clickLocation: Point2D, controller: GameController): void;+HandleMouseDown(mouseDownLoaction: Point2D, controller: GameController): void;+HandleMouseUp(mouseUpLocation: Point2D,
-controller: GameController): void]
+[<<interface>>;IView|+Draw(): void;+HandleClick(clickLocation: Point2D): void;+HandleMouseDown(mouseDownLoaction: Point2D): void;+HandleMouseUp(mouseUpLocation: Point2D): void]
 
 // Enums
 [<<enumeration>>;PlayerColors|WHITE;BLACK]

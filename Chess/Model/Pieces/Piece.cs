@@ -4,7 +4,7 @@ namespace Chess.Model.Pieces;
 
 public abstract class Piece
 {
-    public Piece(PlayerColors color, Square location)
+    protected Piece(PlayerColors color, Square location)
     {
         Color = color;
         Location = location;
@@ -14,5 +14,5 @@ public abstract class Piece
     public Square Location { get; set; }
     public bool IsPickedUp { get; set; }
 
-    public abstract List<Move> GetLegalMoves(Board board);
+    public abstract List<Move> GetLegalMoves();
 }

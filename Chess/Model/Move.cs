@@ -1,3 +1,4 @@
+using Chess.Controller;
 using Chess.Global;
 using Chess.Model.Pieces;
 
@@ -5,9 +6,9 @@ namespace Chess.Model;
 
 public class Move : ICommand
 {
+    private readonly Piece? _pieceCaptured;
+    private readonly Piece _pieceMoved;
     private Square _from;
-    private Piece? _pieceCaptured;
-    private Piece _pieceMoved;
 
 
     public Move(Square from, Square to, Piece pieceMoved, Piece? pieceCaptured)
@@ -22,6 +23,9 @@ public class Move : ICommand
 
     public void Execute()
     {
+        if (_pieceCaptured is not null) GameController.Instance.HandleCapture(_pieceCaptured);
+        _pieceMoved.Location = To;
+
         throw new NotImplementedException();
     }
 

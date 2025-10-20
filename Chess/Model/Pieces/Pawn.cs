@@ -8,7 +8,7 @@ public class Pawn : Piece
     {
     }
 
-    public override List<Move> GetLegalMoves(Board board)
+    public override List<Move> GetLegalMoves()
     {
         throw new NotImplementedException();
     }
