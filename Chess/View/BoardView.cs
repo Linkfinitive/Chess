@@ -40,8 +40,8 @@ public class BoardView : IView
                         p.IsPickedUp = false;
                         GameController.Instance.HandleMove(newLocation, p);
                     }
-
                 p.IsPickedUp = false;
+                break;
             }
     }
 

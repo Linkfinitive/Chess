@@ -36,7 +36,7 @@ public abstract class SlidingPiece : Piece
                 }
 
                 Square? newLocation = GameController.Instance.Board.Squares.Find(s => s.File == file && s.Rank == rank);
-                if (newLocation is not null) legalMoves.Add(new Move(Location, newLocation, this, null));
+                if (newLocation is not null) legalMoves.Add(new Move(Location, newLocation, this));
             }
         }
 

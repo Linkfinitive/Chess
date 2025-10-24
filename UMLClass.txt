@@ -10,11 +10,12 @@ depth: int): Move]
 
 [MoveHistory|-moves: Stack\<Move\>|+AddMove(move: Move): void;+UndoLastMove(): void]
 
-[Move|-from: Square;+To: Square \<\<readonly\>\>;-pieceMoved: Piece;-pieceCaptured: Piece?;-promotion: boolean|+GetAlgebraicMove(): string;]
+[Move|-from: Square;+To: Square \<\<readonly\>\>;-pieceMoved: Piece;-pieceCaptured: Piece?;-isCheck: bool;-isCheckmate: bool;-IsPromotion: bool \<\<readonly\>\>;-IsKingSideCastling: bool \<\<readonly\>\>;-IsQueenSideCastling: bool \<\<readonly\>\>|+GetAlgebraicMove(): string;]
 
 [<<abstract>>;Piece|+Color: PlayerColors \<\<readonly\>\>;+Location: Square \<\<readonly\>\>;+IsPickedUp: bool \<\<readonly\>\>|+GetLegalMoves(): List\<Move\>]
 
-[<<abstract>>;SlidingPiece|#GetLegalSlidingMoves(xDirections: int［］, yDirections: int［］): List\<Move\>]
+[<<abstract>>;SlidingPiece|#GetLegalSlidingMoves(xDirections: int［］
+yDirections: int［］): List\<Move\>]
 
 [Piece]^-[SlidingPiece]
 [Piece]^-[Pawn]

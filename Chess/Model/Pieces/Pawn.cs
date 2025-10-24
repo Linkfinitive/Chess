@@ -54,7 +54,7 @@ public class Pawn : Piece
         if (pieceInWay is null)
         {
             Square? newLocation = GameController.Instance.Board.Squares.Find(s => s.File == file && s.Rank == rank);
-            if (newLocation is not null) return new Move(Location, newLocation, this, null);
+            if (newLocation is not null) return new Move(Location, newLocation, this);
         }
 
         return null;
