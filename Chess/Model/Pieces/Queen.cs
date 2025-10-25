@@ -8,11 +8,11 @@ public class Queen : SlidingPiece
     {
     }
 
-    public override List<Move> GetLegalMoves()
+    public override List<Move> GetLegalMoves(Board board)
     {
-        int[] xDirections = new[] { 1, -1, 0, 0 , 1, 1, -1, -1};
-        int[] yDirections = new[] { 0, 0, 1, -1 , 1, -1, 1, -1};
+        int[] xDirections = new[] { 1, -1, 0, 0, 1, 1, -1, -1 };
+        int[] yDirections = new[] { 0, 0, 1, -1, 1, -1, 1, -1 };
 
-        return GetLegalSlidingMoves(xDirections, yDirections);
+        return GetLegalSlidingMoves(xDirections, yDirections, board);
     }
 }

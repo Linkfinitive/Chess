@@ -14,5 +14,5 @@ public abstract class Piece
     public Square Location { get; set; }
     public bool IsPickedUp { get; set; }
 
-    public abstract List<Move> GetLegalMoves();
+    public abstract List<Move> GetLegalMoves(Board board);
 }

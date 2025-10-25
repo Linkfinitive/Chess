@@ -8,11 +8,11 @@ public class Bishop : SlidingPiece
     {
     }
 
-    public override List<Move> GetLegalMoves()
+    public override List<Move> GetLegalMoves(Board board)
     {
         int[] xDirections = new[] { 1, -1, 1, -1 };
         int[] yDirections = new[] { 1, 1, -1, -1 };
 
-        return GetLegalSlidingMoves(xDirections, yDirections);
+        return GetLegalSlidingMoves(xDirections, yDirections, board);
     }
 }

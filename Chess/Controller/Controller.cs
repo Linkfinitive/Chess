@@ -67,7 +67,7 @@ public class GameController
 
     public void HandleMove(Square to, Piece pieceMoved)
     {
-        List<Move> legalMoves = pieceMoved.GetLegalMoves();
+        List<Move> legalMoves = pieceMoved.GetLegalMoves(Board);
         Move? newMove = legalMoves.Find(m => m.To == to);
         if (newMove is null) return;
         _moveHistory.AddMove(newMove);

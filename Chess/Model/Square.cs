@@ -1,4 +1,6 @@
+using Chess.Controller;
 using Chess.Global;
+using Chess.Model.Pieces;
 
 namespace Chess.Model;
 
@@ -27,5 +29,14 @@ public class Square
         string algebraicFile = letters[File];
 
         return $"{algebraicFile}{algebraicRank}";
+    }
+
+    public Piece? PieceOnSquare()
+    {
+        foreach (Piece p in GameController.Instance.Board.Pieces)
+            if (p.Location == this)
+                return p;
+
+        return null;
     }
 }

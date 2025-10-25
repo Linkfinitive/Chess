@@ -59,4 +59,24 @@ public class Board
 
     public List<Piece> Pieces { get; }
     public List<Square> Squares { get; }
+
+    public Square SquareCalled(string algebraicPosition)
+    {
+        foreach (Square s in Squares)
+            if (s.GetAlgebraicPosition() == algebraicPosition)
+                return s;
+
+        throw new ArgumentOutOfRangeException($"There is no such square as {algebraicPosition}");
+    }
+
+    public Square SquareAt(int rank, int file)
+    {
+        Square? foundSquare = Squares.Find(s => s.Rank == rank && s.File == file);
+        return foundSquare ?? throw new ArgumentOutOfRangeException($"There is no square at rank {rank} and file {file}");
+    }
+
+    public Piece? PieceAt(Square square)
+    {
+        return square.PieceOnSquare();
+    }
 }
