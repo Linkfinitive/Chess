@@ -3,12 +3,14 @@ using Chess.Global;
 namespace Chess.Model.Pieces;
 
 public class Pawn : Piece
+//TODO: Add en passant (need MoveHistory to be implemented to see the previous move)
+//TODO: Need a major cleanup of this pawn code, but it works for now.
 {
-    public Pawn(PlayerColors color, Square location) : base(color, location)
+    public Pawn(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved)
     {
     }
 
-    public override List<Move> GetLegalMoves(Board board)
+    public override List<Move> GetPseudoLegalMoves(Board board)
     {
         List<Move> legalMoves = new List<Move>();
 
@@ -63,5 +65,20 @@ public class Pawn : Piece
         if (pieceToCapture is not null && pieceToCapture.Color != Color) return new Move(Location, board.SquareAt(rank, file), this, pieceToCapture);
 
         return null;
+    }
+
+    public override List<Square> GetAttackedSquares(Board board)
+    {
+        List<Square> attackedSquares = new List<Square>();
+        int direction = Color == PlayerColors.WHITE ? 1 : -1;
+        int rank = Location.Rank + direction;
+        foreach (int fileOffset in new[] { -1, 1 })
+        {
+            int file = Location.File + fileOffset;
+            if (rank >= 0 && rank < 8 && file >= 0 && file < 8)
+                attackedSquares.Add(board.SquareAt(rank, file));
+        }
+
+        return attackedSquares;
     }
 }

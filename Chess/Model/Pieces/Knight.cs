@@ -4,35 +4,43 @@ namespace Chess.Model.Pieces;
 
 public class Knight : Piece
 {
-    public Knight(PlayerColors color, Square location) : base(color, location)
+    public Knight(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved)
     {
     }
 
-    public override List<Move> GetLegalMoves(Board board)
+    public override List<Move> GetPseudoLegalMoves(Board board)
     {
-        List<Move> legalMoves = new List<Move>();
-
-        int[] xDirections = new[] { 2, 2, 1, -1, -2, -2, -1, 1 };
-        int[] yDirections = new[] { 1, -1, 2, 2, 1, -1, -2, -2 };
-
-        int rank = Location.Rank;
-        int file = Location.File;
-
-        for (int direction = 0; direction < xDirections.Length; direction++)
+        List<Move> pseudoLegalMoves = new List<Move>();
+        foreach (Square s in GetAttackedSquares(board))
         {
-            rank += xDirections[direction];
-            file += yDirections[direction];
+            Piece? pieceInWay = board.PieceAt(s);
+            if (pieceInWay is not null && pieceInWay.Color == Color) continue;
 
-            if (rank < 0 || rank > 7 || file < 0 || file > 7) continue;
+            if (pieceInWay is not null && pieceInWay.Color != Color)
+            {
+                pseudoLegalMoves.Add(new Move(Location, pieceInWay.Location, this, pieceInWay));
+                continue;
+            }
 
-            Square targetSquare = board.SquareAt(rank, file);
-            Piece? pieceOnTarget = board.PieceAt(targetSquare);
-
-            if (pieceOnTarget is null)
-                legalMoves.Add(new Move(Location, targetSquare, this));
-            else if (pieceOnTarget.Color != Color) legalMoves.Add(new Move(Location, targetSquare, this, pieceOnTarget));
+            pseudoLegalMoves.Add(new Move(Location, s, this));
         }
 
-        return legalMoves;
+        return pseudoLegalMoves;
+    }
+
+    public override List<Square> GetAttackedSquares(Board board)
+    {
+        List<Square> attackedSquares = new List<Square>();
+        int[] xDirections = new[] { 2, 2, 1, -1, -2, -2, -1, 1 };
+        int[] yDirections = new[] { 1, -1, 2, 2, 1, -1, -2, -2 };
+        for (int i = 0; i < 8; i++)
+        {
+            int rank = Location.Rank + xDirections[i];
+            int file = Location.File + yDirections[i];
+            if (rank < 0 || rank > 7 || file < 0 || file > 7) continue;
+            attackedSquares.Add(board.SquareAt(rank, file));
+        }
+
+        return attackedSquares;
     }
 }

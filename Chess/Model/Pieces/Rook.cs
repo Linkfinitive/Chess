@@ -4,15 +4,20 @@ namespace Chess.Model.Pieces;
 
 public class Rook : SlidingPiece
 {
-    public Rook(PlayerColors color, Square location) : base(color, location)
+    public Rook(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved)
     {
     }
 
-    public override List<Move> GetLegalMoves(Board board)
+    public override List<Move> GetPseudoLegalMoves(Board board)
+    {
+        return GetSlidingPseudoLegalMoves(board);
+    }
+
+    public override List<Square> GetAttackedSquares(Board board)
     {
         int[] xDirections = new[] { 1, -1, 0, 0 };
         int[] yDirections = new[] { 0, 0, 1, -1 };
 
-        return GetLegalSlidingMoves(xDirections, yDirections, board);
+        return GetSlidingAttackedSquares(xDirections, yDirections, board);
     }
 }

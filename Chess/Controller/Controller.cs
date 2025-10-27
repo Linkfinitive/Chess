@@ -67,17 +67,25 @@ public class GameController
 
     public void HandleMove(Square to, Piece pieceMoved)
     {
+        //Get the pseudolegal moves for this piece (we haven't checked for check)
         List<Move> legalMoves = pieceMoved.GetLegalMoves(Board);
+
+        //Find the specific move we are trying to make based on the mouse movement
         Move? newMove = legalMoves.Find(m => m.To == to);
         if (newMove is null) return;
-        _moveHistory.AddMove(newMove);
+
+        //Execute the move and add it to the history
         newMove.Execute();
+        _moveHistory.AddMove(newMove);
     }
 
     public void SetUp()
     {
+        //Load in the fonts required for the views.
         SplashKit.LoadFont("arial", "Arial");
 
+        //Load in the bitmaps for the pieces, and convert them to square so that they display correctly.
+        //TODO: Fix the global constants so that the piece offset scaling is not magic numbers.
         MakeBitmapSquare(SplashKit.LoadBitmap("BishopBlack", "Bishop-Black.bmp"));
         MakeBitmapSquare(SplashKit.LoadBitmap("KingBlack", "King-Black.bmp"));
         MakeBitmapSquare(SplashKit.LoadBitmap("KnightBlack", "Knight-Black.bmp"));
@@ -101,10 +109,5 @@ public class GameController
         int x = (size - original.Width) / 2;
         int y = (size - original.Height) / 2;
         SplashKit.DrawBitmapOnBitmap(square, original, x, y);
-    }
-
-    public void HandleCapture(Piece pieceCaptured)
-    {
-        Board.Pieces.Remove(pieceCaptured);
     }
 }

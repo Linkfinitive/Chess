@@ -5,7 +5,7 @@ namespace Chess.Model;
 
 public class Board
 {
-    public Board()
+    public Board(bool setupInitialPosition = true)
     {
         Squares = new List<Square>();
         Pieces = new List<Piece>();
@@ -17,44 +17,10 @@ public class Board
             int fileToAdd = i % 8;
             PlayerColors colorToAdd = (rankToAdd + fileToAdd) % 2 == 0 ? PlayerColors.BLACK : PlayerColors.WHITE;
 
-            Squares.Add(new Square(rankToAdd, fileToAdd, colorToAdd));
+            Squares.Add(new Square(this, rankToAdd, fileToAdd, colorToAdd));
         }
 
-        //Add white's pieces
-        Pieces.Add(new Rook(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "a1")!));
-        Pieces.Add(new Knight(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "b1")!));
-        Pieces.Add(new Bishop(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "c1")!));
-        Pieces.Add(new Queen(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "d1")!));
-        Pieces.Add(new King(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "e1")!));
-        Pieces.Add(new Bishop(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "f1")!));
-        Pieces.Add(new Knight(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "g1")!));
-        Pieces.Add(new Rook(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "h1")!));
-        Pieces.Add(new Pawn(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "a2")!));
-        Pieces.Add(new Pawn(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "b2")!));
-        Pieces.Add(new Pawn(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "c2")!));
-        Pieces.Add(new Pawn(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "d2")!));
-        Pieces.Add(new Pawn(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "e2")!));
-        Pieces.Add(new Pawn(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "f2")!));
-        Pieces.Add(new Pawn(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "g2")!));
-        Pieces.Add(new Pawn(PlayerColors.WHITE, Squares.Find(s => s.GetAlgebraicPosition() == "h2")!));
-
-        // //Add black's pieces
-        Pieces.Add(new Rook(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "a8")!));
-        Pieces.Add(new Knight(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "b8")!));
-        Pieces.Add(new Bishop(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "c8")!));
-        Pieces.Add(new Queen(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "d8")!));
-        Pieces.Add(new King(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "e8")!));
-        Pieces.Add(new Bishop(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "f8")!));
-        Pieces.Add(new Knight(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "g8")!));
-        Pieces.Add(new Rook(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "h8")!));
-        Pieces.Add(new Pawn(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "a7")!));
-        Pieces.Add(new Pawn(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "b7")!));
-        Pieces.Add(new Pawn(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "c7")!));
-        Pieces.Add(new Pawn(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "d7")!));
-        Pieces.Add(new Pawn(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "e7")!));
-        Pieces.Add(new Pawn(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "f7")!));
-        Pieces.Add(new Pawn(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "g7")!));
-        Pieces.Add(new Pawn(PlayerColors.BLACK, Squares.Find(s => s.GetAlgebraicPosition() == "h7")!));
+        if (setupInitialPosition) Pieces = PieceFactory.SetupInitialPosition(this);
     }
 
     public List<Piece> Pieces { get; }
@@ -77,6 +43,18 @@ public class Board
 
     public Piece? PieceAt(Square square)
     {
-        return square.PieceOnSquare();
+        return square.PieceOnSquare(this);
+    }
+
+    public Board Clone()
+    {
+        Board clonedBoard = new Board(false);
+        foreach (Piece p in Pieces)
+        {
+            Piece clonedPiece = p.Clone(clonedBoard);
+            clonedBoard.Pieces.Add(clonedPiece);
+        }
+
+        return clonedBoard;
     }
 }

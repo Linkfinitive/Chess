@@ -4,15 +4,20 @@ namespace Chess.Model.Pieces;
 
 public class Bishop : SlidingPiece
 {
-    public Bishop(PlayerColors color, Square location) : base(color, location)
+    public Bishop(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved)
     {
     }
 
-    public override List<Move> GetLegalMoves(Board board)
+    public override List<Move> GetPseudoLegalMoves(Board board)
     {
-        int[] xDirections = new[] { 1, -1, 1, -1 };
-        int[] yDirections = new[] { 1, 1, -1, -1 };
+        return GetSlidingPseudoLegalMoves(board);
+    }
 
-        return GetLegalSlidingMoves(xDirections, yDirections, board);
+    public override List<Square> GetAttackedSquares(Board board)
+    {
+        int[] xDirections = new[] { 1, 1, -1, -1 };
+        int[] yDirections = new[] { 1, -1, 1, -1 };
+
+        return GetSlidingAttackedSquares(xDirections, yDirections, board);
     }
 }

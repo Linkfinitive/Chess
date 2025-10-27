@@ -1,4 +1,3 @@
-using Chess.Controller;
 using Chess.Global;
 using Chess.Model.Pieces;
 
@@ -6,7 +5,7 @@ namespace Chess.Model;
 
 public class Square
 {
-    public Square(int rank, int file, PlayerColors color)
+    public Square(Board board, int rank, int file, PlayerColors color)
     {
         if (rank is < 0 or > 7) throw new ArgumentOutOfRangeException(nameof(rank), "Rank must be between 0 and 7 inclusive.");
 
@@ -15,7 +14,10 @@ public class Square
         Color = color;
         Rank = rank;
         File = file;
+        Board = board;
     }
+
+    public Board Board { get; }
 
     public PlayerColors Color { get; }
     public int Rank { get; }
@@ -31,12 +33,26 @@ public class Square
         return $"{algebraicFile}{algebraicRank}";
     }
 
-    public Piece? PieceOnSquare()
+    public Piece? PieceOnSquare(Board board)
     {
-        foreach (Piece p in GameController.Instance.Board.Pieces)
+        foreach (Piece p in board.Pieces)
             if (p.Location == this)
                 return p;
 
         return null;
+    }
+
+    public bool IsAttackedBy(PlayerColors player)
+    {
+        foreach (Piece p in Board.Pieces.Where(p => p.Color == player))
+            //We are iterating the attacked squares, not legal moves, here on purpose: the reason is that pinned
+            //pieces are still considered to be controlling their squares and can give check and checkmate.
+            //Thanks to https://www.chess.com/forum/view/general/pinned-piece-allowing-mate for the clarification.
+        foreach (Square s in p.GetAttackedSquares(Board))
+
+            if (s == this)
+                return true;
+
+        return false;
     }
 }
