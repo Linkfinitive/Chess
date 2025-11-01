@@ -10,6 +10,8 @@ namespace Chess.Controller;
 public class GameController
 {
     private readonly Board _board;
+    private readonly BoardView _boardView;
+    private readonly MoveListView _moveListView;
     private readonly List<IView> _views;
     private Engine _engine;
     private PlayerColors _playerToMove;
@@ -23,9 +25,10 @@ public class GameController
 
         _playerToMove = PlayerColors.WHITE;
 
-        BoardView boardView = new BoardView(_board);
-        MoveListView moveListView = new MoveListView(MoveHistory);
-        _views = new List<IView> { boardView, moveListView };
+        _boardView = new BoardView(_board);
+        _moveListView = new MoveListView(MoveHistory);
+
+        _views = new List<IView> { _boardView, _moveListView };
     }
 
     public MoveHistory MoveHistory { get; }
@@ -38,8 +41,12 @@ public class GameController
         get
         {
             foreach (Piece p in _board.Pieces)
+            {
                 if (p.IsPickedUp)
+                {
                     return p;
+                }
+            }
 
             return null;
         }
@@ -50,19 +57,19 @@ public class GameController
         foreach (IView v in _views) v.Draw();
     }
 
-    public void HandleClick(Point2D clickLocation)
-    {
-        foreach (IView v in _views) v.HandleClick(clickLocation);
-    }
-
     public void HandleMouseDown(Point2D mouseDownLocation)
     {
-        foreach (IView v in _views) v.HandleMouseDown(mouseDownLocation);
+        _boardView.HandleMouseDown(mouseDownLocation);
     }
 
     public void HandleMouseUp(Point2D mouseUpLocation)
     {
-        foreach (IView v in _views) v.HandleMouseUp(mouseUpLocation);
+        _boardView.HandleMouseUp(mouseUpLocation);
+    }
+
+    public void HandleClick(Point2D clickLocation)
+    {
+        _moveListView.HandleClick(clickLocation);
     }
 
     public void HandleMove(Square to, Piece pieceMoved)

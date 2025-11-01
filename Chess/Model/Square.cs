@@ -36,8 +36,12 @@ public class Square
     public Piece? PieceOnSquare(Board board)
     {
         foreach (Piece p in board.Pieces)
+        {
             if (p.Location == this)
+            {
                 return p;
+            }
+        }
 
         return null;
     }
@@ -50,8 +54,12 @@ public class Square
             //Thanks to https://www.chess.com/forum/view/general/pinned-piece-allowing-mate for the clarification.
         foreach (Square s in p.GetAttackedSquares(Board))
 
+        {
             if (s == this)
+            {
                 return true;
+            }
+        }
 
         return false;
     }

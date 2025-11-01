@@ -11,17 +11,13 @@ do
     SplashKit.ClearScreen(Theme.BACKGROUND);
 
     GameController.Instance.DrawViews();
-    try
-    {
-        if (SplashKit.MouseDown(MouseButton.LeftButton)) GameController.Instance.HandleMouseDown(SplashKit.MousePosition());
 
-        if (SplashKit.MouseUp(MouseButton.LeftButton)) GameController.Instance.HandleMouseUp(SplashKit.MousePosition());
+    if (SplashKit.MouseDown(MouseButton.LeftButton)) GameController.Instance.HandleMouseDown(SplashKit.MousePosition());
 
-        if (SplashKit.MouseClicked(MouseButton.LeftButton)) GameController.Instance.HandleClick(SplashKit.MousePosition());
-    }
-    catch (NotImplementedException)
-    {
-    }
+    if (SplashKit.MouseUp(MouseButton.LeftButton)) GameController.Instance.HandleMouseUp(SplashKit.MousePosition());
+
+    //TODO: Turn this on.
+    // if (SplashKit.MouseClicked(MouseButton.LeftButton)) GameController.Instance.HandleClick(SplashKit.MousePosition());
 
     SplashKit.RefreshScreen();
 } while (!window.CloseRequested);

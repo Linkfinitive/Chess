@@ -4,9 +4,7 @@ namespace Chess.Model.Pieces;
 
 public abstract class SlidingPiece : Piece
 {
-    protected SlidingPiece(PlayerColors color, Square location, bool hasMoved) : base(color, location, hasMoved)
-    {
-    }
+    protected SlidingPiece(PlayerColors color, Square location, bool hasMoved) : base(color, location, hasMoved) { }
 
     protected List<Move> GetSlidingPseudoLegalMoves(Board board)
     {

@@ -4,9 +4,7 @@ namespace Chess.Model.Pieces;
 
 public class King : Piece
 {
-    public King(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved)
-    {
-    }
+    public King(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved) { }
 
     public bool IsInCheck
     {
@@ -44,6 +42,7 @@ public class King : Piece
 
         //If there are no unmoved friendly rooks, we can return early (skipping this iterator).
         foreach (Rook r in unMovedFriendlyRooks)
+        {
             switch (r.Location.File)
             {
                 case 0: //Queenside rook is always on File 0 if it hasn't moved.
@@ -67,6 +66,7 @@ public class King : Piece
                     legalMoves.Add(new Move(Location, board.SquareAt(Location.Rank, 6), this));
                     break;
             }
+        }
 
         return legalMoves;
     }

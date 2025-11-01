@@ -21,36 +21,39 @@ public class BoardView : IView
         DrawPieces();
     }
 
-    public void HandleClick(Point2D clickLocation)
-    {
-        throw new NotImplementedException();
-    }
-
     public void HandleMouseDown(Point2D mouseDownLocation)
     {
         if (GameController.Instance.PiecePickedUp is not null) return;
 
         foreach (Piece p in _board.Pieces)
+        {
             if (SquareIsAt(p.Location, (int)mouseDownLocation.X, (int)mouseDownLocation.Y))
+            {
                 p.IsPickedUp = true;
+            }
+        }
     }
 
     public void HandleMouseUp(Point2D mouseUpLocation)
     {
         foreach (Piece p in _board.Pieces)
+        {
             if (p.IsPickedUp)
             {
                 foreach (Square s in _board.Squares)
+                {
                     if (SquareIsAt(s, (int)mouseUpLocation.X, (int)mouseUpLocation.Y))
                     {
                         Square newLocation = s;
                         p.IsPickedUp = false;
                         GameController.Instance.HandleMove(newLocation, p);
                     }
+                }
 
                 p.IsPickedUp = false;
                 break;
             }
+        }
     }
 
     private void DrawBoard()
@@ -59,7 +62,9 @@ public class BoardView : IView
         List<Move> possibleMoves = new List<Move>();
         if (GameController.Instance.PiecePickedUp is not null)
             //Get every move that the picked-up piece can make.
+        {
             possibleMoves = GameController.Instance.PiecePickedUp.GetLegalMoves(_board);
+        }
 
         foreach (Square s in _board.Squares)
         {

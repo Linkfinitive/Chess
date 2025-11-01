@@ -29,8 +29,12 @@ public class Board
     public Square SquareCalled(string algebraicPosition)
     {
         foreach (Square s in Squares)
+        {
             if (s.GetAlgebraicPosition() == algebraicPosition)
+            {
                 return s;
+            }
+        }
 
         throw new ArgumentOutOfRangeException($"There is no such square as {algebraicPosition}");
     }
