@@ -8,7 +8,7 @@ public class Bishop : SlidingPiece
     {
     }
 
-    public override List<Move> GetPseudoLegalMoves(Board board)
+    protected override List<Move> GetPseudoLegalMoves(Board board)
     {
         return GetSlidingPseudoLegalMoves(board);
     }

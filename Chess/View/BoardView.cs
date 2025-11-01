@@ -95,8 +95,8 @@ public class BoardView : IView
             string color = p.Color == PlayerColors.WHITE ? "White" : "Black";
 
             DrawingOptions options = SplashKit.OptionDefaults();
-            options.ScaleX = 0.1f;
-            options.ScaleY = 0.1f;
+            options.ScaleX = GlobalSizes.PIECE_BMP_SCALING_FACTOR;
+            options.ScaleY = GlobalSizes.PIECE_BMP_SCALING_FACTOR;
             SplashKit.DrawBitmap(SplashKit.BitmapNamed($"{p.GetType().Name}{color}-Square"), xPos, yPos, options);
         }
     }

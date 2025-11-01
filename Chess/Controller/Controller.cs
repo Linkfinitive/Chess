@@ -9,7 +9,7 @@ namespace Chess.Controller;
 
 public class GameController
 {
-    private readonly MoveHistory _moveHistory;
+    private readonly Board _board;
     private readonly List<IView> _views;
     private Engine _engine;
     private PlayerColors _playerToMove;
@@ -18,17 +18,17 @@ public class GameController
     {
         _engine = new Engine();
 
-        Board = new Board();
-        _moveHistory = new MoveHistory();
+        _board = new Board();
+        MoveHistory = new MoveHistory();
 
         _playerToMove = PlayerColors.WHITE;
 
-        BoardView boardView = new BoardView(Board);
-        MoveListView moveListView = new MoveListView(_moveHistory);
+        BoardView boardView = new BoardView(_board);
+        MoveListView moveListView = new MoveListView(MoveHistory);
         _views = new List<IView> { boardView, moveListView };
     }
 
-    public Board Board { get; }
+    public MoveHistory MoveHistory { get; }
 
     public static GameController Instance { get; } = new GameController();
 
@@ -37,7 +37,7 @@ public class GameController
     {
         get
         {
-            foreach (Piece p in Board.Pieces)
+            foreach (Piece p in _board.Pieces)
                 if (p.IsPickedUp)
                     return p;
 
@@ -71,7 +71,7 @@ public class GameController
         if (pieceMoved.Color != _playerToMove) return;
 
         //Get the pseudolegal moves for this piece (we haven't checked for check)
-        List<Move> legalMoves = pieceMoved.GetLegalMoves(Board);
+        List<Move> legalMoves = pieceMoved.GetLegalMoves(_board);
 
         //Find the specific move we are trying to make based on the mouse movement
         Move? newMove = legalMoves.Find(m => m.To == to);
@@ -79,7 +79,7 @@ public class GameController
 
         //Execute the move and add it to the history
         newMove.Execute();
-        _moveHistory.AddMove(newMove);
+        MoveHistory.AddMove(newMove);
 
         //Set the next player to move.
         _playerToMove = _playerToMove == PlayerColors.WHITE ? PlayerColors.BLACK : PlayerColors.WHITE;
@@ -90,8 +90,7 @@ public class GameController
         //Load in the fonts required for the views.
         SplashKit.LoadFont("arial", "Arial");
 
-        //Load in the bitmaps for the pieces, and convert them to square so that they display correctly.
-        //TODO: Fix the global constants so that the piece offset scaling is not magic numbers.
+        //Load in the bitmaps for the pieces and convert them to square so that they display correctly.
         MakeBitmapSquare(SplashKit.LoadBitmap("BishopBlack", "Bishop-Black.bmp"));
         MakeBitmapSquare(SplashKit.LoadBitmap("KingBlack", "King-Black.bmp"));
         MakeBitmapSquare(SplashKit.LoadBitmap("KnightBlack", "Knight-Black.bmp"));

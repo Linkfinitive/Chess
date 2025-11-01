@@ -17,7 +17,7 @@ public class King : Piece
         }
     }
 
-    public override List<Move> GetPseudoLegalMoves(Board board)
+    protected override List<Move> GetPseudoLegalMoves(Board board)
     {
         //Adds the regular moves
         List<Move> legalMoves = GetPseudoLegalSingleSpaceSlidingMoves(board);

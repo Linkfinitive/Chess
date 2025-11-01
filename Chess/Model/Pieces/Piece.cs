@@ -18,7 +18,7 @@ public abstract class Piece
     public bool HasMoved { get; set; }
     public bool IsPickedUp { get; set; }
 
-    public abstract List<Move> GetPseudoLegalMoves(Board board);
+    protected abstract List<Move> GetPseudoLegalMoves(Board board);
 
     public List<Move> GetLegalMoves(Board board)
     {

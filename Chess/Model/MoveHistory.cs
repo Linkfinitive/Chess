@@ -9,6 +9,8 @@ public class MoveHistory
         _moves = new Stack<Move>();
     }
 
+    public Move? MostRecentMove => _moves.Count == 0 ? null : _moves.Peek();
+
     public void AddMove(Move move)
     {
         _moves.Push(move);

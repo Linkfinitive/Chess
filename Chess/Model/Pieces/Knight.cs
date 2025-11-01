@@ -8,7 +8,7 @@ public class Knight : Piece
     {
     }
 
-    public override List<Move> GetPseudoLegalMoves(Board board)
+    protected override List<Move> GetPseudoLegalMoves(Board board)
     {
         List<Move> pseudoLegalMoves = new List<Move>();
         foreach (Square s in GetAttackedSquares(board))
