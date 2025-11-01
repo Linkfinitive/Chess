@@ -5,3 +5,12 @@ public enum PlayerColors
     WHITE,
     BLACK
 }
+
+public enum GameStatus
+{
+    WHITE_TO_MOVE,
+    BLACK_TO_MOVE,
+    CHECKMATE,
+    STALEMATE,
+    DRAW
+}

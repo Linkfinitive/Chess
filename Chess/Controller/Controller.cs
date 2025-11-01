@@ -14,7 +14,7 @@ public class GameController
     private readonly MoveListView _moveListView;
     private readonly List<IView> _views;
     private Engine _engine;
-    private PlayerColors _playerToMove;
+    private GameStatus _gameStatus;
 
     private GameController()
     {
@@ -23,12 +23,25 @@ public class GameController
         _board = new Board();
         MoveHistory = new MoveHistory();
 
-        _playerToMove = PlayerColors.WHITE;
+        _gameStatus = GameStatus.WHITE_TO_MOVE;
 
         _boardView = new BoardView(_board);
         _moveListView = new MoveListView(MoveHistory);
 
         _views = new List<IView> { _boardView, _moveListView };
+    }
+
+    private PlayerColors? PlayerToMove
+    {
+        get
+        {
+            return _gameStatus switch
+            {
+                GameStatus.WHITE_TO_MOVE => PlayerColors.WHITE,
+                GameStatus.BLACK_TO_MOVE => PlayerColors.BLACK,
+                _ => null
+            };
+        }
     }
 
     public MoveHistory MoveHistory { get; }
@@ -59,12 +72,13 @@ public class GameController
 
     public void HandleMouseDown(Point2D mouseDownLocation)
     {
-        _boardView.HandleMouseDown(mouseDownLocation);
+        //Mouse clicks are only passed on if the game is still in progress.
+        if (_gameStatus is GameStatus.WHITE_TO_MOVE or GameStatus.BLACK_TO_MOVE) _boardView.HandleMouseDown(mouseDownLocation);
     }
 
     public void HandleMouseUp(Point2D mouseUpLocation)
     {
-        _boardView.HandleMouseUp(mouseUpLocation);
+        if (_gameStatus is GameStatus.WHITE_TO_MOVE or GameStatus.BLACK_TO_MOVE) _boardView.HandleMouseUp(mouseUpLocation);
     }
 
     public void HandleClick(Point2D clickLocation)
@@ -75,21 +89,22 @@ public class GameController
     public void HandleMove(Square to, Piece pieceMoved)
     {
         //Check we are moving a piece of the correct colour for this turn.
-        if (pieceMoved.Color != _playerToMove) return;
+        if (pieceMoved.Color != PlayerToMove) return;
 
-        //Get the pseudolegal moves for this piece (we haven't checked for check)
+        //Get the legal moves for this piece
         List<Move> legalMoves = pieceMoved.GetLegalMoves(_board);
 
         //Find the specific move we are trying to make based on the mouse movement
         Move? newMove = legalMoves.Find(m => m.To == to);
         if (newMove is null) return;
 
+        //Set the next player to move, or set the status to an end of game state.
+        //This needs to be done before the move is executed, as it involves cloning the board.
+        _gameStatus = UpdateGameStatus(newMove);
+
         //Execute the move and add it to the history
         newMove.Execute();
         MoveHistory.AddMove(newMove);
-
-        //Set the next player to move.
-        _playerToMove = _playerToMove == PlayerColors.WHITE ? PlayerColors.BLACK : PlayerColors.WHITE;
     }
 
     public void SetUp()
@@ -121,5 +136,16 @@ public class GameController
         int x = (size - original.Width) / 2;
         int y = (size - original.Height) / 2;
         SplashKit.DrawBitmapOnBitmap(square, original, x, y);
+    }
+
+    private GameStatus UpdateGameStatus(Move lastMove)
+    {
+        if (lastMove.IsCheckmate) return GameStatus.CHECKMATE;
+        if (lastMove.IsStalemate) return GameStatus.STALEMATE;
+
+        //TODO: Add checks for draw by 50 move rule, 3fold repetition, dead position, and insufficient material. Agreement doesn't work cause it's a computer.
+
+        //If nothing special has happened, we can just swap who's turn it is.
+        return PlayerToMove == PlayerColors.WHITE ? GameStatus.BLACK_TO_MOVE : GameStatus.WHITE_TO_MOVE;
     }
 }

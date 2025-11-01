@@ -6,22 +6,54 @@ namespace Chess.Model;
 public class Move : ICommand
 {
     private readonly Square _from;
-    private readonly bool _isCheck;
-    private readonly bool _isCheckmate;
+
     private readonly Piece? _pieceCaptured;
 
 
-    public Move(Square from, Square to, Piece pieceMoved, Piece? pieceCaptured = null, bool isCheck = false, bool isCheckmate = false)
+    public Move(Square from, Square to, Piece pieceMoved, Piece? pieceCaptured = null)
     {
-        if (isCheck && isCheckmate) throw new ArgumentException("Move cannot be both Check and Checkmate");
-
         _from = from;
         To = to;
         PieceMoved = pieceMoved;
         _pieceCaptured = pieceCaptured;
-        _isCheck = isCheck;
-        _isCheckmate = isCheckmate;
     }
+
+    private bool PreventsMovement
+    {
+        get
+        {
+            //Clone this move and execute on a copy of the board.
+            Board clonedBoard = PieceMoved.Location.Board.Clone();
+            Clone(clonedBoard).Execute();
+
+            //See if the opponent is able to make any legal moves.
+            List<Move> opponentLegalMoves = new List<Move>();
+            foreach (Piece p in clonedBoard.Pieces.Where(p => p.Color != PieceMoved.Color))
+            {
+                opponentLegalMoves.AddRange(p.GetLegalMoves(clonedBoard));
+            }
+
+            return opponentLegalMoves.Count == 0;
+        }
+    }
+
+    private bool IsCheck
+    {
+        get
+        {
+            //Clone this move and execute on a copy of the board.
+            Board clonedBoard = PieceMoved.Location.Board.Clone();
+            Clone(clonedBoard).Execute();
+
+            //See if the opponent is in check after the execution.
+            King? opponentKing = clonedBoard.Pieces.Find(p => p.GetType().Name == "King" && p.Color != PieceMoved.Color) as King;
+            return opponentKing?.IsInCheck ?? throw new NullReferenceException("King not found - something has gone seriously wrong.");
+        }
+    }
+
+    public bool IsCheckmate => IsCheck && PreventsMovement;
+
+    public bool IsStalemate => !IsCheck && PreventsMovement;
 
     public Piece PieceMoved { get; }
 
@@ -103,8 +135,8 @@ public class Move : ICommand
 
         if (IsPromotion) algebraicMove += "=Q"; //TODO: Add the ability to promote to other than a Queen.
 
-        if (_isCheck) algebraicMove += "+";
-        if (_isCheckmate) algebraicMove += "#";
+        if (IsCheck && !IsCheckmate) algebraicMove += "+";
+        if (IsCheckmate) algebraicMove += "#";
 
         return algebraicMove;
     }
@@ -132,6 +164,6 @@ public class Move : ICommand
 
         if (clonedPiece is null) throw new NullReferenceException("Piece to be moved is null - something went wrong with the cloning process");
 
-        return new Move(clonedFrom, clonedTo, clonedPiece, clonedCaptured, _isCheck, _isCheckmate);
+        return new Move(clonedFrom, clonedTo, clonedPiece, clonedCaptured);
     }
 }
