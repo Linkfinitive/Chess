@@ -47,6 +47,7 @@ public class BoardView : IView
                         p.IsPickedUp = false;
                         GameController.Instance.HandleMove(newLocation, p);
                     }
+
                 p.IsPickedUp = false;
                 break;
             }
@@ -57,11 +58,8 @@ public class BoardView : IView
         //If there is a piece picked up, then we want to colour those squares differently as an indication.
         List<Move> possibleMoves = new List<Move>();
         if (GameController.Instance.PiecePickedUp is not null)
-        {
             //Get every move that the picked-up piece can make.
-             possibleMoves = GameController.Instance.PiecePickedUp.GetLegalMoves(_board);
-
-        }
+            possibleMoves = GameController.Instance.PiecePickedUp.GetLegalMoves(_board);
 
         foreach (Square s in _board.Squares)
         {
@@ -71,10 +69,7 @@ public class BoardView : IView
             Color color = s.Color == PlayerColors.BLACK ? Theme.BLACK_SQUARE : Theme.WHITE_SQUARE;
 
             //If the square is the "TO" property of any move in the possible moves, then highlight it with a different colour.
-            if (possibleMoves.Any(m => m.To == s))
-            {
-                color = s.Color == PlayerColors.BLACK ? Theme.HIGHLIGHTED_BLACK_SQUARE : Theme.HIGHLIGHTED_WHITE_SQUARE;
-            }
+            if (possibleMoves.Any(m => m.To == s)) color = s.Color == PlayerColors.BLACK ? Theme.HIGHLIGHTED_BLACK_SQUARE : Theme.HIGHLIGHTED_WHITE_SQUARE;
 
             //Draw the square.
             SplashKit.FillRectangle(color, xPos, yPos, GlobalSizes.BOARD_SQUARE_SIZE, GlobalSizes.BOARD_SQUARE_SIZE);
@@ -86,15 +81,15 @@ public class BoardView : IView
         foreach (Piece p in _board.Pieces)
         {
             (double xPos, double yPos) = CalculatePosition(p.Location);
-            xPos -= 2.7 * GlobalSizes.BOARD_SQUARE_SIZE;
-            yPos -= 2.7 * GlobalSizes.BOARD_SQUARE_SIZE;
+            xPos -= GlobalSizes.PIECE_BMP_OFFSET_MULTIPLIER * GlobalSizes.BOARD_SQUARE_SIZE;
+            yPos -= GlobalSizes.PIECE_BMP_OFFSET_MULTIPLIER * GlobalSizes.BOARD_SQUARE_SIZE;
 
             if (p.IsPickedUp)
             {
-                //If the piece is picked up then it should follow the mouse pointer.
+                //If the piece is picked up, then it should follow the mouse pointer.
                 (xPos, yPos) = ((int)SplashKit.MousePosition().X, (int)SplashKit.MousePosition().Y);
-                xPos -= 3.2 * GlobalSizes.BOARD_SQUARE_SIZE;
-                yPos -= 3.2 * GlobalSizes.BOARD_SQUARE_SIZE;
+                xPos -= GlobalSizes.PIECE_BMP_MOUSE_POINTER_OFFSET_MULTIPLIER * GlobalSizes.BOARD_SQUARE_SIZE;
+                yPos -= GlobalSizes.PIECE_BMP_MOUSE_POINTER_OFFSET_MULTIPLIER * GlobalSizes.BOARD_SQUARE_SIZE;
             }
 
             string color = p.Color == PlayerColors.WHITE ? "White" : "Black";
