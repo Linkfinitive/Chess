@@ -9,6 +9,11 @@ public class Move : ICommand
 
     private readonly Piece? _pieceCaptured;
 
+    private bool _hasExecuted;
+
+    private bool? _isCheck;
+    private bool? _preventsMovement;
+
 
     public Move(Square from, Square to, Piece pieceMoved, Piece? pieceCaptured = null)
     {
@@ -16,38 +21,36 @@ public class Move : ICommand
         To = to;
         PieceMoved = pieceMoved;
         _pieceCaptured = pieceCaptured;
+        _hasExecuted = false;
+        _isCheck = null;
+        _preventsMovement = null;
     }
 
     private bool PreventsMovement
     {
+        //Needs to be lazy evaluated to avoid an infinite loop in the constructor - but needs to be cached because it must be calculated before execution.
         get
         {
-            //Clone this move and execute on a copy of the board.
-            Board clonedBoard = PieceMoved.Location.Board.Clone();
-            Clone(clonedBoard).Execute();
-
-            //See if the opponent is able to make any legal moves.
-            List<Move> opponentLegalMoves = new List<Move>();
-            foreach (Piece p in clonedBoard.Pieces.Where(p => p.Color != PieceMoved.Color))
+            if (_preventsMovement is null)
             {
-                opponentLegalMoves.AddRange(p.GetLegalMoves(clonedBoard));
+                CalculateCheckStatus();
             }
 
-            return opponentLegalMoves.Count == 0;
+            return _preventsMovement!.Value;
         }
     }
 
     private bool IsCheck
     {
+        //Needs to be lazy evaluated to avoid an infinite loop in the constructor - but needs to be cached because it must be calculated before execution.
         get
         {
-            //Clone this move and execute on a copy of the board.
-            Board clonedBoard = PieceMoved.Location.Board.Clone();
-            Clone(clonedBoard).Execute();
+            if (_isCheck is null)
+            {
+                CalculateCheckStatus();
+            }
 
-            //See if the opponent is in check after the execution.
-            King? opponentKing = clonedBoard.Pieces.Find(p => p.GetType().Name == "King" && p.Color != PieceMoved.Color) as King;
-            return opponentKing?.IsInCheck ?? throw new NullReferenceException("King not found - something has gone seriously wrong.");
+            return _isCheck!.Value;
         }
     }
 
@@ -83,7 +86,19 @@ public class Move : ICommand
 
     public void Execute()
     {
+        Execute(false);
+    }
+
+    private void Execute(bool suppressCheckStatusCalculation)
+    {
+        if (_hasExecuted) throw new InvalidOperationException("Cannot execute a move that has already been executed.");
+
         Board board = _from.Board == To.Board ? _from.Board : throw new ArgumentException("Cannot move between board objects");
+
+        //We need the ability to suppress this to avoid recursive calls when cloning and executing moves (Because CalculateCheckStatus calls Execute on a clone)
+        if (!suppressCheckStatusCalculation && (_preventsMovement is null || _isCheck is null)) CalculateCheckStatus();
+
+        _hasExecuted = true;
 
         if (IsPromotion)
         {
@@ -155,8 +170,10 @@ public class Move : ICommand
         };
     }
 
-    public Move Clone(Board clonedBoard)
+    private Move Clone(Board clonedBoard)
     {
+        if (_hasExecuted) throw new InvalidOperationException("Cannot clone a move that has already been executed.");
+
         Square clonedFrom = clonedBoard.SquareCalled(_from.GetAlgebraicPosition());
         Square clonedTo = clonedBoard.SquareCalled(To.GetAlgebraicPosition());
         Piece? clonedPiece = clonedBoard.PieceAt(clonedFrom);
@@ -165,5 +182,30 @@ public class Move : ICommand
         if (clonedPiece is null) throw new NullReferenceException("Piece to be moved is null - something went wrong with the cloning process");
 
         return new Move(clonedFrom, clonedTo, clonedPiece, clonedCaptured);
+    }
+
+    public void CloneAndExecute(Board clonedBoard)
+    {
+        Clone(clonedBoard).Execute(true);
+    }
+
+    private void CalculateCheckStatus()
+    {
+        //Clone this move and execute on a copy of the board.
+        Board clonedBoard = PieceMoved.Location.Board.Clone();
+        CloneAndExecute(clonedBoard);
+
+        //See if the opponent is in check after the execution.
+        King? opponentKing = clonedBoard.Pieces.Find(p => p.GetType().Name == "King" && p.Color != PieceMoved.Color) as King;
+        _isCheck = opponentKing?.IsInCheck ?? throw new NullReferenceException("King not found - something has gone seriously wrong.");
+
+        //See if the opponent is able to make any legal moves.
+        List<Move> opponentLegalMoves = new List<Move>();
+        foreach (Piece p in clonedBoard.Pieces.Where(p => p.Color != PieceMoved.Color))
+        {
+            opponentLegalMoves.AddRange(p.GetLegalMoves(clonedBoard));
+        }
+
+        _preventsMovement = opponentLegalMoves.Count == 0;
     }
 }

@@ -14,7 +14,6 @@ public class GameController
     private readonly MoveListView _moveListView;
     private readonly List<IView> _views;
     private Engine _engine;
-    private GameStatus _gameStatus;
 
     private GameController()
     {
@@ -23,7 +22,7 @@ public class GameController
         _board = new Board();
         MoveHistory = new MoveHistory();
 
-        _gameStatus = GameStatus.WHITE_TO_MOVE;
+        GameStatus = GameStatus.WHITE_TO_MOVE;
 
         _boardView = new BoardView(_board);
         _moveListView = new MoveListView(MoveHistory);
@@ -31,11 +30,13 @@ public class GameController
         _views = new List<IView> { _boardView, _moveListView };
     }
 
+    public GameStatus GameStatus { get; private set; }
+
     private PlayerColors? PlayerToMove
     {
         get
         {
-            return _gameStatus switch
+            return GameStatus switch
             {
                 GameStatus.WHITE_TO_MOVE => PlayerColors.WHITE,
                 GameStatus.BLACK_TO_MOVE => PlayerColors.BLACK,
@@ -73,12 +74,12 @@ public class GameController
     public void HandleMouseDown(Point2D mouseDownLocation)
     {
         //Mouse clicks are only passed on if the game is still in progress.
-        if (_gameStatus is GameStatus.WHITE_TO_MOVE or GameStatus.BLACK_TO_MOVE) _boardView.HandleMouseDown(mouseDownLocation);
+        if (GameStatus is GameStatus.WHITE_TO_MOVE or GameStatus.BLACK_TO_MOVE) _boardView.HandleMouseDown(mouseDownLocation);
     }
 
     public void HandleMouseUp(Point2D mouseUpLocation)
     {
-        if (_gameStatus is GameStatus.WHITE_TO_MOVE or GameStatus.BLACK_TO_MOVE) _boardView.HandleMouseUp(mouseUpLocation);
+        if (GameStatus is GameStatus.WHITE_TO_MOVE or GameStatus.BLACK_TO_MOVE) _boardView.HandleMouseUp(mouseUpLocation);
     }
 
     public void HandleClick(Point2D clickLocation)
@@ -98,13 +99,12 @@ public class GameController
         Move? newMove = legalMoves.Find(m => m.To == to);
         if (newMove is null) return;
 
-        //Set the next player to move, or set the status to an end of game state.
-        //This needs to be done before the move is executed, as it involves cloning the board.
-        _gameStatus = UpdateGameStatus(newMove);
-
         //Execute the move and add it to the history
         newMove.Execute();
         MoveHistory.AddMove(newMove);
+
+        //Set the next player to move, or set the status to an end of game state.
+        GameStatus = UpdateGameStatus(newMove);
     }
 
     public void SetUp()

@@ -12,6 +12,8 @@ public static class Theme
     public static readonly Color HIGHLIGHTED_WHITE_SQUARE = SplashKit.ColorMistyRose();
     public static readonly Color HIGHLIGHTED_BLACK_SQUARE = SplashKit.ColorPink();
     public static readonly Color BACKGROUND = SplashKit.ColorBisque();
+    public static readonly Color GAME_STATUS_TEXT = SplashKit.ColorSeaGreen();
+    public static readonly Color MOVE_LIST_TEXT = SplashKit.ColorDimGray();
 }
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -22,7 +24,7 @@ public static class GlobalSizes
     public const int WINDOW_HEIGHT = (int)(WINDOW_WIDTH * (9 / (double)16));
 
     //The size of the board and the squares in pixels.
-    private const int BOARD_SIZE = (int)(WINDOW_WIDTH / (double)2);
+    public const int BOARD_SIZE = (int)(WINDOW_WIDTH / (double)2);
     public const int BOARD_SQUARE_SIZE = (int)(BOARD_SIZE / (double)8);
 
     //Distance from the top and left of the window to where the board begins.
@@ -35,4 +37,9 @@ public static class GlobalSizes
     public const double PIECE_BMP_MOUSE_POINTER_OFFSET_MULTIPLIER = 3.4; //Should be 2 when WINDOW_WIDTH = 1920
 
     public const float PIECE_BMP_SCALING_FACTOR = BOARD_SQUARE_SIZE / (float)800;
+
+    public const int MOVE_LIST_LEFT_OFFSET = 2 * BOARD_LEFT_OFFSET + BOARD_SIZE;
+    public const int MOVE_LIST_VERTICAL_OFFSET = BOARD_VERTICAL_OFFSET;
+    public const int MOVE_LIST_INTERNAL_HORIZONTAL_OFFSET = BOARD_LEFT_OFFSET;
+    public const int MOVE_LIST_INTERNAL_VERTICAL_OFFSET = MOVE_LIST_INTERNAL_HORIZONTAL_OFFSET / 2;
 }

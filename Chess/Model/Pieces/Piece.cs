@@ -29,7 +29,7 @@ public abstract class Piece
         {
             //Take a copy of the board and move and execute the move on the cloned board.
             Board clonedBoard = board.Clone();
-            m.Clone(clonedBoard).Execute();
+            m.CloneAndExecute(clonedBoard);
 
             //Check that the king of the moving player is not in check.
             King? friendlyKing = clonedBoard.Pieces.Find(p => p.GetType().Name == "King" && p.Color == Color) as King;
