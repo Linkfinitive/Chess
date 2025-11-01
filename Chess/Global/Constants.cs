@@ -31,6 +31,8 @@ public static class GlobalSizes
 
     //Multipliers to offset the piece bitmaps when drawn on the board. These are magic numbers obtained through trial and error
     //to make the pieces appear centred on the squares.
-    public const double PIECE_BMP_OFFSET_MULTIPLIER = WINDOW_WIDTH / (double)474;
-    public const double PIECE_BMP_MOUSE_POINTER_OFFSET_MULTIPLIER = WINDOW_WIDTH / (double)400;
+    public const double PIECE_BMP_OFFSET_MULTIPLIER = 2.7; //Should be 1.64 when WINDOW_WIDTH = 1920
+    public const double PIECE_BMP_MOUSE_POINTER_OFFSET_MULTIPLIER = 3.4; //Should be 2 when WINDOW_WIDTH = 1920
+
+    public const float PIECE_BMP_SCALING_FACTOR = BOARD_SQUARE_SIZE / (float)800;
 }
