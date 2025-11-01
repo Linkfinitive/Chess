@@ -8,6 +8,13 @@ namespace Chess.View;
 
 public class BoardView : IView
 {
+    private readonly Board _board;
+
+    public BoardView(Board board)
+    {
+        _board = board;
+    }
+
     public void Draw()
     {
         DrawBoard();
@@ -21,19 +28,19 @@ public class BoardView : IView
 
     public void HandleMouseDown(Point2D mouseDownLocation)
     {
-        if (GameController.Instance.PiecePickedUp) return;
+        if (GameController.Instance.PiecePickedUp is not null) return;
 
-        foreach (Piece p in GameController.Instance.Board.Pieces)
+        foreach (Piece p in _board.Pieces)
             if (SquareIsAt(p.Location, (int)mouseDownLocation.X, (int)mouseDownLocation.Y))
                 p.IsPickedUp = true;
     }
 
     public void HandleMouseUp(Point2D mouseUpLocation)
     {
-        foreach (Piece p in GameController.Instance.Board.Pieces)
+        foreach (Piece p in _board.Pieces)
             if (p.IsPickedUp)
             {
-                foreach (Square s in GameController.Instance.Board.Squares)
+                foreach (Square s in _board.Squares)
                     if (SquareIsAt(s, (int)mouseUpLocation.X, (int)mouseUpLocation.Y))
                     {
                         Square newLocation = s;
@@ -47,19 +54,36 @@ public class BoardView : IView
 
     private void DrawBoard()
     {
-        foreach (Square s in GameController.Instance.Board.Squares)
+        //If there is a piece picked up, then we want to colour those squares differently as an indication.
+        List<Move> possibleMoves = new List<Move>();
+        if (GameController.Instance.PiecePickedUp is not null)
+        {
+            //Get every move that the picked-up piece can make.
+             possibleMoves = GameController.Instance.PiecePickedUp.GetLegalMoves(_board);
+
+        }
+
+        foreach (Square s in _board.Squares)
         {
             (int xPos, int yPos) = CalculatePosition(s);
 
+            //Set the colour appropriately for the square's colour property.
             Color color = s.Color == PlayerColors.BLACK ? Theme.BLACK_SQUARE : Theme.WHITE_SQUARE;
 
+            //If the square is the "TO" property of any move in the possible moves, then highlight it with a different colour.
+            if (possibleMoves.Any(m => m.To == s))
+            {
+                color = s.Color == PlayerColors.BLACK ? Theme.HIGHLIGHTED_BLACK_SQUARE : Theme.HIGHLIGHTED_WHITE_SQUARE;
+            }
+
+            //Draw the square.
             SplashKit.FillRectangle(color, xPos, yPos, GlobalSizes.BOARD_SQUARE_SIZE, GlobalSizes.BOARD_SQUARE_SIZE);
         }
     }
 
     private void DrawPieces()
     {
-        foreach (Piece p in GameController.Instance.Board.Pieces)
+        foreach (Piece p in _board.Pieces)
         {
             (double xPos, double yPos) = CalculatePosition(p.Location);
             xPos -= 2.7 * GlobalSizes.BOARD_SQUARE_SIZE;

@@ -23,7 +23,7 @@ public class GameController
 
         _playerToMove = PlayerColors.WHITE;
 
-        BoardView boardView = new BoardView();
+        BoardView boardView = new BoardView(Board);
         MoveListView moveListView = new MoveListView(_moveHistory);
         _views = new List<IView> { boardView, moveListView };
     }
@@ -33,15 +33,15 @@ public class GameController
     public static GameController Instance { get; } = new GameController();
 
 
-    public bool PiecePickedUp
+    public Piece? PiecePickedUp
     {
         get
         {
             foreach (Piece p in Board.Pieces)
                 if (p.IsPickedUp)
-                    return true;
+                    return p;
 
-            return false;
+            return null;
         }
     }
 
@@ -67,6 +67,9 @@ public class GameController
 
     public void HandleMove(Square to, Piece pieceMoved)
     {
+        //Check we are moving a piece of the correct colour for this turn.
+        if (pieceMoved.Color != _playerToMove) return;
+
         //Get the pseudolegal moves for this piece (we haven't checked for check)
         List<Move> legalMoves = pieceMoved.GetLegalMoves(Board);
 
@@ -77,6 +80,9 @@ public class GameController
         //Execute the move and add it to the history
         newMove.Execute();
         _moveHistory.AddMove(newMove);
+
+        //Set the next player to move.
+        _playerToMove = _playerToMove == PlayerColors.WHITE ? PlayerColors.BLACK : PlayerColors.WHITE;
     }
 
     public void SetUp()

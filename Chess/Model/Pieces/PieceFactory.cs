@@ -22,43 +22,41 @@ public static class PieceFactory
     {
         List<Piece> pieces = new List<Piece>();
 
-        List<Square> squares = board.Squares;
-
         //Add White's pieces
-        pieces.Add(new Rook(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "a1")!));
-        pieces.Add(new Knight(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "b1")!));
-        pieces.Add(new Bishop(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "c1")!));
-        pieces.Add(new Queen(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "d1")!));
-        pieces.Add(new King(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "e1")!));
-        pieces.Add(new Bishop(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "f1")!));
-        pieces.Add(new Knight(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "g1")!));
-        pieces.Add(new Rook(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "h1")!));
-        pieces.Add(new Pawn(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "a2")!));
-        pieces.Add(new Pawn(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "b2")!));
-        pieces.Add(new Pawn(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "c2")!));
-        pieces.Add(new Pawn(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "d2")!));
-        pieces.Add(new Pawn(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "e2")!));
-        pieces.Add(new Pawn(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "f2")!));
-        pieces.Add(new Pawn(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "g2")!));
-        pieces.Add(new Pawn(PlayerColors.WHITE, squares.Find(s => s.GetAlgebraicPosition() == "h2")!));
+        pieces.Add(CreatePiece("rook", PlayerColors.WHITE, board.SquareCalled("a1")));
+        pieces.Add(CreatePiece("knight", PlayerColors.WHITE, board.SquareCalled("b1")));
+        pieces.Add(CreatePiece("bishop", PlayerColors.WHITE, board.SquareCalled("c1")));
+        pieces.Add(CreatePiece("queen", PlayerColors.WHITE, board.SquareCalled("d1")));
+        pieces.Add(CreatePiece("king", PlayerColors.WHITE, board.SquareCalled("e1")));
+        pieces.Add(CreatePiece("bishop", PlayerColors.WHITE, board.SquareCalled("f1")));
+        pieces.Add(CreatePiece("knight", PlayerColors.WHITE, board.SquareCalled("g1")));
+        pieces.Add(CreatePiece("rook", PlayerColors.WHITE, board.SquareCalled("h1")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.WHITE, board.SquareCalled("a2")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.WHITE, board.SquareCalled("b2")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.WHITE, board.SquareCalled("c2")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.WHITE, board.SquareCalled("d2")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.WHITE, board.SquareCalled("e2")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.WHITE, board.SquareCalled("f2")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.WHITE, board.SquareCalled("g2")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.WHITE, board.SquareCalled("h2")));
 
-        // //Add Black's pieces
-        pieces.Add(new Rook(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "a8")!));
-        pieces.Add(new Knight(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "b8")!));
-        pieces.Add(new Bishop(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "c8")!));
-        pieces.Add(new Queen(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "d8")!));
-        pieces.Add(new King(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "e8")!));
-        pieces.Add(new Bishop(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "f8")!));
-        pieces.Add(new Knight(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "g8")!));
-        pieces.Add(new Rook(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "h8")!));
-        pieces.Add(new Pawn(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "a7")!));
-        pieces.Add(new Pawn(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "b7")!));
-        pieces.Add(new Pawn(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "c7")!));
-        pieces.Add(new Pawn(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "d7")!));
-        pieces.Add(new Pawn(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "e7")!));
-        pieces.Add(new Pawn(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "f7")!));
-        pieces.Add(new Pawn(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "g7")!));
-        pieces.Add(new Pawn(PlayerColors.BLACK, squares.Find(s => s.GetAlgebraicPosition() == "h7")!));
+        //Add Black's pieces
+        pieces.Add(CreatePiece("rook", PlayerColors.BLACK, board.SquareCalled("a8")));
+        pieces.Add(CreatePiece("knight", PlayerColors.BLACK, board.SquareCalled("b8")));
+        pieces.Add(CreatePiece("bishop", PlayerColors.BLACK, board.SquareCalled("c8")));
+        pieces.Add(CreatePiece("queen", PlayerColors.BLACK, board.SquareCalled("d8")));
+        pieces.Add(CreatePiece("king", PlayerColors.BLACK, board.SquareCalled("e8")));
+        pieces.Add(CreatePiece("bishop", PlayerColors.BLACK, board.SquareCalled("f8")));
+        pieces.Add(CreatePiece("knight", PlayerColors.BLACK, board.SquareCalled("g8")));
+        pieces.Add(CreatePiece("rook", PlayerColors.BLACK, board.SquareCalled("h8")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.BLACK, board.SquareCalled("a7")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.BLACK, board.SquareCalled("b7")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.BLACK, board.SquareCalled("c7")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.BLACK, board.SquareCalled("d7")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.BLACK, board.SquareCalled("e7")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.BLACK, board.SquareCalled("f7")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.BLACK, board.SquareCalled("g7")));
+        pieces.Add(CreatePiece("pawn", PlayerColors.BLACK, board.SquareCalled("h7")));
 
         return pieces;
     }

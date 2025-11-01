@@ -47,7 +47,7 @@ public abstract class SlidingPiece : Piece
                 Square target = board.SquareAt(rank, file);
                 attackedSquares.Add(target);
 
-                //If we just hit a piece, then we aren't attacking the squares behind it.
+                // If we just hit a piece, then we aren't attacking the squares behind it.
                 if (board.PieceAt(target) is not null) break;
             }
         }

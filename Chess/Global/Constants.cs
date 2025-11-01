@@ -8,6 +8,8 @@ public static class Theme
     //These should be used in place of directly using the SplashKit offerings, so that bulk (theme) changes can be made in future.
     public static Color WHITE_SQUARE = SplashKit.ColorMintCream();
     public static Color BLACK_SQUARE = SplashKit.ColorDarkSeaGreen();
+    public static Color HIGHLIGHTED_WHITE_SQUARE = SplashKit.ColorMistyRose();
+    public static Color HIGHLIGHTED_BLACK_SQUARE = SplashKit.ColorPink();
     public static Color BACKGROUND = SplashKit.ColorBisque();
 }
 
