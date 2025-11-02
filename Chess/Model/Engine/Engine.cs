@@ -17,6 +17,7 @@ public class Engine
 
     public async Task<Move?> FindBestMove(Board board, int depth)
     {
+        //This method is async so that the UI doesn't freeze during evaluation.
         (_, Move? bestMove) = await Task.Run(() => Evaluate(board, depth, PlayingAs));
         return bestMove ?? throw new NullReferenceException("Best move not found.");
     }
