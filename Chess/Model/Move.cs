@@ -134,7 +134,6 @@ public class Move : ICommand
 
         if (_pieceCaptured is not null) board.Pieces.Remove(_pieceCaptured);
         PieceMoved.Location = To;
-        PieceMoved.HasMoved = true;
     }
 
     public string GetAlgebraicMove() //TODO: Add Piece Disambiguation.
