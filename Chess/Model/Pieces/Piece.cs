@@ -44,7 +44,7 @@ public abstract class Piece
             m.CloneAndExecute(clonedBoard);
 
             //Check that the king of the moving player is not in check.
-            King? friendlyKing = clonedBoard.Pieces.Find(p => p.GetType().Name == "King" && p.Color == Color) as King;
+            King? friendlyKing = clonedBoard.Pieces.Find(p => p is King && p.Color == Color) as King;
             if (friendlyKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong.");
             if (friendlyKing.IsInCheck) continue;
 

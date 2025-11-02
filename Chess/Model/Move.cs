@@ -68,16 +68,16 @@ public class Move : ICommand
         get
         {
             //If it's not a pawn being moved, then it's not a double push.
-            if (PieceMoved.GetType().Name != "Pawn") return false;
+            if (PieceMoved is not Pawn) return false;
 
             //Check that the rank of the To and From squares differ by 2.
             return _from.Rank == To.Rank + 2 || _from.Rank == To.Rank - 2;
         }
     }
 
-    private bool IsKingSideCastling => typeof(King) == PieceMoved.GetType() && To.GetAlgebraicPosition() is "g1" or "g8" && _from.GetAlgebraicPosition() is "e1" or "e8";
-    private bool IsQueenSideCastling => typeof(King) == PieceMoved.GetType() && To.GetAlgebraicPosition() is "c1" or "c8" && _from.GetAlgebraicPosition() is "e1" or "e8";
-    private bool IsPromotion => typeof(Pawn) == PieceMoved.GetType() && To.Rank is 0 or 7;
+    private bool IsKingSideCastling => PieceMoved is King && To.GetAlgebraicPosition() is "g1" or "g8" && _from.GetAlgebraicPosition() is "e1" or "e8";
+    private bool IsQueenSideCastling => PieceMoved is King && To.GetAlgebraicPosition() is "c1" or "c8" && _from.GetAlgebraicPosition() is "e1" or "e8";
+    private bool IsPromotion => PieceMoved is Pawn && To.Rank is 0 or 7;
 
     public void Undo()
     {
@@ -202,7 +202,7 @@ public class Move : ICommand
         CloneAndExecute(clonedBoard);
 
         //See if the opponent is in check after the execution.
-        King? opponentKing = clonedBoard.Pieces.Find(p => p.GetType().Name == "King" && p.Color != PieceMoved.Color) as King;
+        King? opponentKing = clonedBoard.Pieces.Find(p => p is King && p.Color != PieceMoved.Color) as King;
         _isCheck = opponentKing?.IsInCheck ?? throw new NullReferenceException("King not found - something has gone seriously wrong.");
 
         //See if the opponent is able to make any legal moves.
