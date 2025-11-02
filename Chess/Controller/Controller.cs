@@ -110,7 +110,7 @@ public class GameController
         if (PlayerToMove == _engine.PlayingAs)
         {
             _moveListView.EngineIsThinking = true;
-            Move bestMove = await _engine.FindBestMoveAsync(_board, 3);
+            Move bestMove = await _engine.FindBestMove(_board, 3);
             _moveListView.EngineIsThinking = false;
             bestMove.Execute();
             MoveHistory.AddMove(bestMove);
