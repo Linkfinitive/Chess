@@ -13,11 +13,11 @@ public class GameController
     private readonly BoardView _boardView;
     private readonly MoveListView _moveListView;
     private readonly List<IView> _views;
-    private Engine _engine;
+    private readonly Engine _engine;
 
     private GameController()
     {
-        _engine = new Engine();
+        _engine = new Engine(PlayerColors.BLACK); //TODO: Add a way to change or randomize who will be playing white.
 
         _board = new Board();
         MoveHistory = new MoveHistory();
@@ -87,7 +87,7 @@ public class GameController
         _moveListView.HandleClick(clickLocation);
     }
 
-    public void HandleMove(Square to, Piece pieceMoved)
+    public async Task HandleMove(Square to, Piece pieceMoved)
     {
         //Check we are moving a piece of the correct colour for this turn.
         if (pieceMoved.Color != PlayerToMove) return;
@@ -105,6 +105,17 @@ public class GameController
 
         //Set the next player to move, or set the status to an end of game state.
         GameStatus = UpdateGameStatus(newMove);
+
+        //If it's the engine's turn, then the engine can make its move.
+        if (PlayerToMove == _engine.PlayingAs)
+        {
+            _moveListView.EngineIsThinking = true;
+            Move bestMove = await _engine.FindBestMoveAsync(_board, 3);
+            _moveListView.EngineIsThinking = false;
+            bestMove.Execute();
+            MoveHistory.AddMove(bestMove);
+            GameStatus = UpdateGameStatus(bestMove);
+        }
     }
 
     public void SetUp()

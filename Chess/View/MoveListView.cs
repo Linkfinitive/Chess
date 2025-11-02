@@ -14,6 +14,8 @@ public class MoveListView : IView
         _moveHistory = moveHistory;
     }
 
+    public bool EngineIsThinking { get; set; } = false;
+
     public void Draw()
     {
         string gameStatusText = GameController.Instance.GameStatus switch
@@ -25,6 +27,9 @@ public class MoveListView : IView
             GameStatus.DRAW => "Draw",
             _ => throw new Exception("Invalid game status")
         };
+
+        //If the engine is thinking then we want to let the player know.
+        if (EngineIsThinking) gameStatusText += " (Engine is Thinking)";
 
         //Title showing game status
         SplashKit.DrawText(gameStatusText, Theme.GAME_STATUS_TEXT, "arial", 24, GlobalSizes.MOVE_LIST_LEFT_OFFSET, GlobalSizes.MOVE_LIST_VERTICAL_OFFSET);
