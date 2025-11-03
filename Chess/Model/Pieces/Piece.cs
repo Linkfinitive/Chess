@@ -43,9 +43,14 @@ public abstract class Piece
         Board clonedBoard = board.Clone();
 
         //The cloned analogue of this piece is the piece on the same square on the cloned board.
-        Piece clonedAnalogueOfThisPiece = clonedBoard.PieceAt(clonedBoard.SquareCalled(Location.GetAlgebraicPosition())) ?? throw new NullReferenceException("Couldn't find analogue of this piece on the cloned board - something went wrong in the cloning process.");
+        Piece? clonedPiece = clonedBoard.PieceAt(clonedBoard.SquareCalled(Location.GetAlgebraicPosition()));
+        if (clonedPiece is null) throw new NullReferenceException("Couldn't find analogue of this piece on the cloned board - something went wrong in the cloning process.");
 
-        List<Move> pseudoLegalMoves = clonedAnalogueOfThisPiece.GetPseudoLegalMoves();
+        //Find the king of the moving player.
+        King? friendlyKing = clonedBoard.Pieces.Find(p => p is King && p.Color == Color) as King;
+        if (friendlyKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong.");
+
+        List<Move> pseudoLegalMoves = clonedPiece.GetPseudoLegalMoves();
         List<Move> legalMoves = new List<Move>();
 
         foreach (Move m in pseudoLegalMoves)
@@ -53,19 +58,18 @@ public abstract class Piece
             m.Execute(true);
 
             //Check that the king of the moving player is not in check.
-            King? friendlyKing = clonedBoard.Pieces.Find(p => p is King && p.Color == Color) as King;
-            if (friendlyKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong.");
+            bool moveIsLegal = !friendlyKing.IsInCheck;
+
+            //Have to do this before cloning the move, since we can't clone executed moves.
+            m.Undo();
 
             //If the move is fully legal, we can add it to the list to return.
-            if (!friendlyKing.IsInCheck)
-            {
-                //Before adding it though, we need to convert it back to the original board, which is complicated because we changed the piece.
-                Square to = board.SquareCalled(m.To.GetAlgebraicPosition());
-                Piece? pieceCaptured = board.PieceAt(to);
-                legalMoves.Add(new Move(Location, to, this, pieceCaptured));
-            }
-
-            m.Undo();
+            //Before adding it though, we need to convert it back to the original board.
+            //Avoiding Move.Clone() for this since it searches every piece and we already know which piece we are moving.
+            Square to = board.SquareCalled(m.To.GetAlgebraicPosition());
+            Piece? pieceCaptured = board.PieceAt(to);
+            Move clonedMove = new Move(Location, to, this, pieceCaptured);
+            if (moveIsLegal) legalMoves.Add(clonedMove);
         }
 
         return legalMoves;

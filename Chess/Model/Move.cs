@@ -234,7 +234,7 @@ public class Move : ICommand
         if (_pieceCaptured is not null)
         {
             //In a previous implementation, it was assumed that a captured piece would always be at this.To.
-            //This did not support en, passant, obviously, and so hence why this implementation seems complicated.
+            //This did not support en passant, obviously, and so hence why this implementation seems complicated.
             Square capturedLocationOnOriginalBoard = _pieceCaptured.Location;
             Square clonedCapturedSquare = clonedBoard.SquareCalled(capturedLocationOnOriginalBoard.GetAlgebraicPosition());
             clonedCaptured = clonedBoard.PieceAt(clonedCapturedSquare);
@@ -243,16 +243,11 @@ public class Move : ICommand
         return new Move(clonedFrom, clonedTo, clonedPiece, clonedCaptured);
     }
 
-    public void CloneAndExecute(Board clonedBoard)
-    {
-        Clone(clonedBoard).Execute(true);
-    }
-
     private void CalculateCheckStatus()
     {
         //Clone this move and execute on a copy of the board.
         Board clonedBoard = PieceMoved.Location.Board.Clone();
-        CloneAndExecute(clonedBoard);
+        Clone(clonedBoard).Execute(true);
 
         //See if the opponent is in check after the execution.
         King? opponentKing = clonedBoard.Pieces.Find(p => p is King && p.Color != PieceMoved.Color) as King;
