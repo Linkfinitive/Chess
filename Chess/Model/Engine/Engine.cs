@@ -17,63 +17,18 @@ public class Engine
 
     public async Task<Move> FindBestMove(Board board, int depth)
     {
-        if (depth < 1) throw new ArgumentOutOfRangeException(nameof(depth), "Depth must be at least 1.");
-
-        //Get all the legal moves for the player to move.
-        List<Move> allLegalMoves = new List<Move>();
-        foreach (Piece p in board.Pieces.Where(p => p.Color == PlayingAs))
-        {
-            List<Move> pieceLegalMoves = p.GetLegalMoves(board);
-            allLegalMoves.AddRange(pieceLegalMoves);
-        }
-
-        //The first level of the search can be done in parallel since there will only be a non-exponential number
-        //of possible moves. The cost of spawning tasks is worth it for the parallelism in this case, but not worth
-        //it to do on every level of the recursive calls.
-        List<Task<int>> tasks = new List<Task<int>>();
-        Move? bestMove = null;
-        int bestEvaluation = int.MinValue;
-        foreach (Move m in allLegalMoves)
-        {
-            tasks.Add(Task.Run(async () =>
-            {
-                //The board needs to be cloned at this step rather than any other, because the cloned
-                //state needs to carry through the the recursive calls, but the original board needs to
-                //be unmodified.
-                Board clonedBoard = board.Clone();
-                m.CloneAndExecute(clonedBoard);
-
-                PlayerColors nextPlayer = PlayingAs == PlayerColors.WHITE ? PlayerColors.BLACK : PlayerColors.WHITE;
-                int evaluation = await Evaluate(clonedBoard, depth - 1, nextPlayer);
-
-                //We need to negate the evaluation for the recursive call, since it's always the other player that is moving.
-                evaluation = -evaluation;
-                return evaluation;
-            }));
-
-            int[] evaluations = await Task.WhenAll(tasks);
-
-            foreach (int evaluation in evaluations)
-            {
-                if (evaluation > bestEvaluation)
-                {
-                    bestMove = m;
-                    bestEvaluation = evaluation;
-
-                }
-            }
-        }
-
+        //This method is async so that the UI doesn't freeze during evaluation.
+        (_, Move? bestMove) = await Task.Run(() => Evaluate(board, depth, PlayingAs));
         return bestMove ?? throw new NullReferenceException("Best move not found.");
     }
 
-    private async Task<int> Evaluate(Board board, int depth, PlayerColors playerToMove)
+    private (int, Move?) Evaluate(Board board, int depth, PlayerColors playerToMove)
     {
         //Recursive depth cutoff.
         if (depth == 0)
         {
             int evaluation = _evaluationStrategy.Evaluate(board);
-            return playerToMove == PlayerColors.WHITE ? evaluation : -evaluation;
+            return (playerToMove == PlayerColors.WHITE ? evaluation : -evaluation, null);
         }
 
         //Get all the legal moves for the player to move.
@@ -93,13 +48,17 @@ public class Engine
 
             //This is just an arbitrary extremely low value for checkmates. We are avoiding int.MinValue due to overflow concerns.
             const int checkMateScore = -100_000_000;
-            return movingPlayerKing.IsInCheck ? checkMateScore : 0;
+
+            //This null move return should only ever happen on recursive calls, since if the engine is already checkmated or the game is
+            //in stalemate, then the engine will not be called upon at all.
+            return (movingPlayerKing.IsInCheck ? checkMateScore : 0, null);
         }
 
         //TODO: Check for other special cases (other draw conditions).
 
         //Start with a very low initial value, then search through all the possible moves
         //and recursively update the evaluation if we find something better.
+        Move? bestMove = null;
         int bestEvaluation = int.MinValue;
         foreach (Move m in allLegalMoves)
         {
@@ -110,7 +69,7 @@ public class Engine
             m.CloneAndExecute(clonedBoard);
 
             PlayerColors nextPlayer = playerToMove == PlayerColors.WHITE ? PlayerColors.BLACK : PlayerColors.WHITE;
-            int evaluation = await Evaluate(clonedBoard, depth - 1, nextPlayer);
+            (int evaluation, _) = Evaluate(clonedBoard, depth - 1, nextPlayer);
 
             //We need to negate the evaluation for the recursive call, since it's always the other player that is moving.
             evaluation = -evaluation;
@@ -119,9 +78,10 @@ public class Engine
             if (evaluation > bestEvaluation)
             {
                 bestEvaluation = evaluation;
+                bestMove = m;
             }
         }
 
-        return bestEvaluation;
+        return bestMove is not null ? (bestEvaluation, bestMove) : throw new Exception("No legal moves found.");
     }
 }
