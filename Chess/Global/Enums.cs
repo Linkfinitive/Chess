@@ -14,3 +14,13 @@ public enum GameStatus
     STALEMATE,
     DRAW
 }
+
+public enum PieceType
+{
+    PAWN,
+    KNIGHT,
+    BISHOP,
+    ROOK,
+    QUEEN,
+    KING
+}

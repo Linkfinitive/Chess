@@ -6,14 +6,17 @@ public abstract class Piece
 {
     private Square _location;
 
-    protected Piece(PlayerColors color, Square location, bool hasMoved)
+    protected Piece(PlayerColors color, Square location, bool hasMoved, PieceType type)
     {
         //The constructor gives the option to set if the piece has moved because it matters for promoted pieces, and cloned boards.
         //In general, though, HasMoved is automatically set to true when the Location is updated.
         Color = color;
-        Location = location;
+        _location = location;
         HasMoved = hasMoved;
+        Type = type;
     }
+
+    public PieceType Type { get; }
 
     public PlayerColors Color { get; }
 
@@ -58,7 +61,7 @@ public abstract class Piece
     public Piece Clone(Board newBoard)
     {
         Square newLocation = newBoard.SquareCalled(Location.GetAlgebraicPosition());
-        return PieceFactory.CreatePiece(GetType().Name, Color, newLocation, HasMoved);
+        return PieceFactory.CreatePiece(Type, Color, newLocation, HasMoved);
     }
 
     public abstract List<Square> GetAttackedSquares(Board board);
