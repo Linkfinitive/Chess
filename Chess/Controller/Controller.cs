@@ -110,8 +110,10 @@ public class GameController
         if (PlayerToMove == _engine.PlayingAs)
         {
             _moveListView.EngineIsThinking = true;
-            Move bestMove = await _engine.FindBestMove(_board, 3);
+            _boardView.Locked = true;
+            Move bestMove = await _engine.FindBestMove(_board, 3) ?? throw new Exception("Engine failed to find a move");
             _moveListView.EngineIsThinking = false;
+            _boardView.Locked = false;
             bestMove.Execute();
             MoveHistory.AddMove(bestMove);
             GameStatus = UpdateGameStatus(bestMove);
