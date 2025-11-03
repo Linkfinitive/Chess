@@ -144,7 +144,7 @@ public class Move : ICommand
     }
 
 
-    private void Execute(bool suppressCheckStatusCalculation)
+    public void Execute(bool suppressCheckStatusCalculation)
     {
         if (_hasExecuted) throw new InvalidOperationException("Cannot execute a move that has already been executed.");
         Board board = _from.Board == To.Board ? _from.Board : throw new ArgumentException("Cannot move between board objects");
@@ -222,7 +222,7 @@ public class Move : ICommand
         };
     }
 
-    private Move Clone(Board clonedBoard)
+    public Move Clone(Board clonedBoard)
     {
         if (_hasExecuted) throw new InvalidOperationException("Cannot clone a move that has already been executed.");
 

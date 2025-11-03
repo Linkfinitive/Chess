@@ -18,8 +18,11 @@ public class Engine
     public async Task<Move> FindBestMove(Board board, int depth)
     {
         //This method is async so that the UI doesn't freeze during evaluation.
-        (_, Move? bestMove) = await Task.Run(() => Evaluate(board, depth, PlayingAs));
-        return bestMove ?? throw new NullReferenceException("Best move not found.");
+        //We're running the entire recursive evaluation on a cloned board, so that it doesn't
+        //mess up the UI when the engine is rapidly trying moves.
+        Board clonedBoard = board.Clone();
+        (_, Move? bestMove) = await Task.Run(() => Evaluate(clonedBoard, depth, PlayingAs));
+        return bestMove?.Clone(board) ?? throw new NullReferenceException("Best move not found.");
     }
 
     private (int, Move?) Evaluate(Board board, int depth, PlayerColors playerToMove)
@@ -62,15 +65,10 @@ public class Engine
         int bestEvaluation = int.MinValue;
         foreach (Move m in allLegalMoves)
         {
-            //The board needs to be cloned at this step rather than any other, because the cloned
-            //state needs to carry through the the recursive calls, but the original board needs to
-            //be unmodified.
-            Board clonedBoard = board.Clone();
-            m.CloneAndExecute(clonedBoard);
-
+            m.Execute(true);
             PlayerColors nextPlayer = playerToMove == PlayerColors.WHITE ? PlayerColors.BLACK : PlayerColors.WHITE;
-            (int evaluation, _) = Evaluate(clonedBoard, depth - 1, nextPlayer);
-
+            (int evaluation, _) = Evaluate(board, depth - 1, nextPlayer);
+            m.Undo();
             //We need to negate the evaluation for the recursive call, since it's always the other player that is moving.
             evaluation = -evaluation;
 
