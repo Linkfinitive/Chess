@@ -30,7 +30,7 @@ public abstract class Piece
         }
     }
 
-    public bool HasMoved { get; private set; }
+    public bool HasMoved { get; set; }
     public bool IsPickedUp { get; set; }
 
     protected abstract List<Move> GetPseudoLegalMoves(Board board);
