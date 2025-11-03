@@ -40,11 +40,15 @@ public class Engine
         }
 
         //Get all the legal moves for the player to move.
+        //Using a for loop instead of LINQ to avoid the overhead of 2 IEnumerators.
         List<Move> allLegalMoves = new List<Move>();
-        foreach (Piece p in board.Pieces.Where(p => p.Color == playerToMove))
+        for (int i = 0; i < board.Pieces.Count; i++)
         {
+            Piece p = board.Pieces[i];
+            if (p.Color != playerToMove) continue;
             List<Move> pieceLegalMoves = p.GetLegalMoves(board);
             allLegalMoves.AddRange(pieceLegalMoves);
+
         }
 
         //Check if the moving player has been checkmated or a stalemate has been reached.
