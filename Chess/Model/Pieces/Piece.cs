@@ -35,7 +35,39 @@ public abstract class Piece
 
     protected abstract List<Move> GetPseudoLegalMoves();
 
-    public List<Move> GetLegalMoves()
+    public List<Move> GetLegalMoves(bool useClonedBoard = true)
+    {
+        //Using the cloned board is the default behaviour because it doesn't make the UI spazz out. If the board has'
+        //already been cloned, however, then not cloning the board is much cheaper.
+        if (useClonedBoard) return GetLegalMovesUsingClonedBoard();
+
+        Board board = Location.Board;
+
+        //Find the king of the moving player.
+        King? friendlyKing = board.Pieces.Find(p => p is King && p.Color == Color) as King;
+        if (friendlyKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong.");
+
+        List<Move> pseudoLegalMoves = GetPseudoLegalMoves();
+        List<Move> legalMoves = new List<Move>();
+
+        foreach (Move m in pseudoLegalMoves)
+        {
+            m.Execute(true);
+
+            //Check that the king of the moving player is not in check.
+            bool moveIsLegal = !friendlyKing.IsInCheck;
+
+            //Have to do this before cloning the move, since we can't clone executed moves.
+            m.Undo();
+
+            //If the move is fully legal, we can add it to the list to return.
+            if (moveIsLegal) legalMoves.Add(m);
+        }
+
+        return legalMoves;
+    }
+
+    private List<Move> GetLegalMovesUsingClonedBoard()
     {
         Board board = Location.Board;
 
