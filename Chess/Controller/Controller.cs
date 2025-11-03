@@ -111,7 +111,7 @@ public class GameController
         {
             _moveListView.EngineIsThinking = true;
             _boardView.Locked = true;
-            Move bestMove = await _engine.FindBestMove(_board, 3) ?? throw new Exception("Engine failed to find a move");
+            Move bestMove = await _engine.FindBestMove(_board, 4) ?? throw new Exception("Engine failed to find a move");
             _moveListView.EngineIsThinking = false;
             _boardView.Locked = false;
             bestMove.Execute();
