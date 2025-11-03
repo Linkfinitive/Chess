@@ -30,11 +30,11 @@ public class Engine
         King whiteKing = clonedBoard.Pieces.Find(p => p is King && p.Color == PlayerColors.WHITE) as King ?? throw new Exception("White king not found");
         King blackKing = clonedBoard.Pieces.Find(p => p is King && p.Color == PlayerColors.BLACK) as King ?? throw new Exception("Black king not found");
 
-        (_, Move? bestMove) = await Task.Run(() => Evaluate(clonedBoard, depth, PlayingAs, whiteKing, blackKing, -Infinity, Infinity));
+        (_, Move? bestMove) = await Task.Run(() => Negamax(clonedBoard, depth, PlayingAs, whiteKing, blackKing, -Infinity, Infinity));
         return bestMove?.Clone(board) ?? throw new NullReferenceException("Best move not found.");
     }
 
-    private (int, Move?) Evaluate(Board board, int depth, PlayerColors playerToMove, King whiteKing, King blackKing, int alpha, int beta)
+    private (int, Move?) Negamax(Board board, int depth, PlayerColors playerToMove, King whiteKing, King blackKing, int alpha, int beta)
     {
         //Recursive depth cutoff.
         if (depth == 0)
@@ -81,7 +81,7 @@ public class Engine
         foreach (Move m in allLegalMoves)
         {
             m.Execute(!movingPlayerInCheck);
-            (int evaluation, _) = Evaluate(board, depth - 1, nextPlayer, whiteKing, blackKing, -beta, -alpha);
+            (int evaluation, _) = Negamax(board, depth - 1, nextPlayer, whiteKing, blackKing, -beta, -alpha);
             m.Undo();
 
             //We need to negate the evaluation for the recursive call, since it's always the other player that is moving.
