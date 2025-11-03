@@ -67,7 +67,7 @@ public class BoardView : IView
         if (GameController.Instance.PiecePickedUp is not null)
             //Get every move that the picked-up piece can make.
         {
-            possibleMoves = GameController.Instance.PiecePickedUp.GetLegalMoves(_board);
+            possibleMoves = GameController.Instance.PiecePickedUp.GetLegalMoves();
         }
 
         foreach (Square s in _board.Squares)

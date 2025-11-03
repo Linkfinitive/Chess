@@ -46,9 +46,8 @@ public class Engine
         {
             Piece p = board.Pieces[i];
             if (p.Color != playerToMove) continue;
-            List<Move> pieceLegalMoves = p.GetLegalMoves(board);
+            List<Move> pieceLegalMoves = p.GetLegalMoves();
             allLegalMoves.AddRange(pieceLegalMoves);
-
         }
 
         //Check if the moving player has been checkmated or a stalemate has been reached.

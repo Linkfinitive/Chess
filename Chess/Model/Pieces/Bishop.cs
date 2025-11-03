@@ -6,16 +6,16 @@ public class Bishop : SlidingPiece
 {
     public Bishop(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved, PieceType.BISHOP) { }
 
-    protected override List<Move> GetPseudoLegalMoves(Board board)
+    protected override List<Move> GetPseudoLegalMoves()
     {
-        return GetSlidingPseudoLegalMoves(board);
+        return GetSlidingPseudoLegalMoves();
     }
 
-    public override List<Square> GetAttackedSquares(Board board)
+    public override List<Square> GetAttackedSquares()
     {
         int[] xDirections = new[] { 1, 1, -1, -1 };
         int[] yDirections = new[] { 1, -1, 1, -1 };
 
-        return GetSlidingAttackedSquares(xDirections, yDirections, board);
+        return GetSlidingAttackedSquares(xDirections, yDirections);
     }
 }

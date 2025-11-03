@@ -11,9 +11,9 @@ public class GameController
 {
     private readonly Board _board;
     private readonly BoardView _boardView;
+    private readonly Engine _engine;
     private readonly MoveListView _moveListView;
     private readonly List<IView> _views;
-    private readonly Engine _engine;
 
     private GameController()
     {
@@ -93,7 +93,7 @@ public class GameController
         if (pieceMoved.Color != PlayerToMove) return;
 
         //Get the legal moves for this piece
-        List<Move> legalMoves = pieceMoved.GetLegalMoves(_board);
+        List<Move> legalMoves = pieceMoved.GetLegalMoves();
 
         //Find the specific move we are trying to make based on the mouse movement
         Move? newMove = legalMoves.Find(m => m.To == to);

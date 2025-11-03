@@ -33,24 +33,25 @@ public abstract class Piece
     public bool HasMoved { get; set; }
     public bool IsPickedUp { get; set; }
 
-    protected abstract List<Move> GetPseudoLegalMoves(Board board);
+    protected abstract List<Move> GetPseudoLegalMoves();
 
-    public List<Move> GetLegalMoves(Board board)
+    public List<Move> GetLegalMoves()
     {
+        Board board = Location.Board;
+
         //Perform tests on a cloned board to ensure that the UI doesn't get messed up.
         Board clonedBoard = board.Clone();
 
         //The cloned analogue of this piece is the piece on the same square on the cloned board.
         Piece clonedAnalogueOfThisPiece = clonedBoard.PieceAt(clonedBoard.SquareCalled(Location.GetAlgebraicPosition())) ?? throw new NullReferenceException("Couldn't find analogue of this piece on the cloned board - something went wrong in the cloning process.");
 
-        List<Move> pseudoLegalMoves = clonedAnalogueOfThisPiece.GetPseudoLegalMoves(clonedBoard);
+        List<Move> pseudoLegalMoves = clonedAnalogueOfThisPiece.GetPseudoLegalMoves();
         List<Move> legalMoves = new List<Move>();
 
         foreach (Move m in pseudoLegalMoves)
         {
-            Console.WriteLine("Made it 1");
             m.Execute(true);
-            Console.WriteLine("Made it");
+
             //Check that the king of the moving player is not in check.
             King? friendlyKing = clonedBoard.Pieces.Find(p => p is King && p.Color == Color) as King;
             if (friendlyKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong.");
@@ -76,5 +77,5 @@ public abstract class Piece
         return PieceFactory.CreatePiece(Type, Color, newLocation, HasMoved);
     }
 
-    public abstract List<Square> GetAttackedSquares(Board board);
+    public abstract List<Square> GetAttackedSquares();
 }

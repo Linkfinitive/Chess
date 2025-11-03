@@ -6,10 +6,11 @@ public abstract class SlidingPiece : Piece
 {
     protected SlidingPiece(PlayerColors color, Square location, bool hasMoved, PieceType type) : base(color, location, hasMoved, type) { }
 
-    protected List<Move> GetSlidingPseudoLegalMoves(Board board)
+    protected List<Move> GetSlidingPseudoLegalMoves()
     {
+        Board board = Location.Board;
         List<Move> pseudoLegalMoves = new List<Move>();
-        foreach (Square s in GetAttackedSquares(board))
+        foreach (Square s in GetAttackedSquares())
         {
             Piece? pieceInWay = board.PieceAt(s);
             if (pieceInWay is not null && pieceInWay.Color == Color) continue;
@@ -26,8 +27,9 @@ public abstract class SlidingPiece : Piece
         return pseudoLegalMoves;
     }
 
-    protected List<Square> GetSlidingAttackedSquares(int[] xDirections, int[] yDirections, Board board)
+    protected List<Square> GetSlidingAttackedSquares(int[] xDirections, int[] yDirections)
     {
+        Board board = Location.Board;
         List<Square> attackedSquares = new List<Square>();
 
         for (int i = 0; i < xDirections.Length; i++)

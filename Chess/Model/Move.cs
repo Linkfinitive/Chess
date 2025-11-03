@@ -262,7 +262,7 @@ public class Move : ICommand
         List<Move> opponentLegalMoves = new List<Move>();
         foreach (Piece p in clonedBoard.Pieces.Where(p => p.Color != PieceMoved.Color))
         {
-            opponentLegalMoves.AddRange(p.GetLegalMoves(clonedBoard));
+            opponentLegalMoves.AddRange(p.GetLegalMoves());
         }
 
         _preventsMovement = opponentLegalMoves.Count == 0;

@@ -6,10 +6,11 @@ public class Knight : Piece
 {
     public Knight(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved, PieceType.KNIGHT) { }
 
-    protected override List<Move> GetPseudoLegalMoves(Board board)
+    protected override List<Move> GetPseudoLegalMoves()
     {
+        Board board = Location.Board;
         List<Move> pseudoLegalMoves = new List<Move>();
-        foreach (Square s in GetAttackedSquares(board))
+        foreach (Square s in GetAttackedSquares())
         {
             Piece? pieceInWay = board.PieceAt(s);
             if (pieceInWay is not null && pieceInWay.Color == Color) continue;
@@ -26,8 +27,9 @@ public class Knight : Piece
         return pseudoLegalMoves;
     }
 
-    public override List<Square> GetAttackedSquares(Board board)
+    public override List<Square> GetAttackedSquares()
     {
+        Board board = Location.Board;
         List<Square> attackedSquares = new List<Square>();
         int[] xDirections = new[] { 2, 2, 1, -1, -2, -2, -1, 1 };
         int[] yDirections = new[] { 1, -1, 2, 2, 1, -1, -2, -2 };
