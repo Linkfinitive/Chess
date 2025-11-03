@@ -24,6 +24,13 @@ public class Engine
 
     private (int, Move?) Evaluate(Board board, int depth, PlayerColors playerToMove)
     {
+        //Recursive depth cutoff.
+        if (depth == 0)
+        {
+            int evaluation = _evaluationStrategy.Evaluate(board);
+            return (playerToMove == PlayerColors.WHITE ? evaluation : -evaluation, null);
+        }
+
         //Get all the legal moves for the player to move.
         List<Move> allLegalMoves = new List<Move>();
         foreach (Piece p in board.Pieces.Where(p => p.Color == playerToMove))
@@ -47,13 +54,6 @@ public class Engine
             return (movingPlayerKing.IsInCheck ? checkMateScore : 0, null);
         }
 
-        //Recursive depth cutoff.
-        if (depth == 0)
-        {
-            int evaluation = _evaluationStrategy.Evaluate(board);
-            return (playerToMove == PlayerColors.WHITE ? evaluation : -evaluation, null);
-        }
-
         //TODO: Check for other special cases (other draw conditions).
 
         //Start with a very low initial value, then search through all the possible moves
@@ -73,7 +73,6 @@ public class Engine
 
             //We need to negate the evaluation for the recursive call, since it's always the other player that is moving.
             evaluation = -evaluation;
-            if (evaluation != 0) Console.WriteLine($"Evaluation for move {m.GetAlgebraicMove()}: {evaluation}."); //Debug only.
 
             //If this is the best move we've found so far, then we should save it.
             if (evaluation > bestEvaluation)
