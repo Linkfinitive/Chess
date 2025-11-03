@@ -21,11 +21,16 @@ public class Engine
         //We're running the entire recursive evaluation on a cloned board, so that it doesn't
         //mess up the UI when the engine is rapidly trying moves.
         Board clonedBoard = board.Clone();
-        (_, Move? bestMove) = await Task.Run(() => Evaluate(clonedBoard, depth, PlayingAs));
+
+        //Precompute the king objects so that it doesn't have to be done more than once.
+        King whiteKing = clonedBoard.Pieces.Find(p => p is King && p.Color == PlayerColors.WHITE) as King ?? throw new Exception("White king not found");
+        King blackKing = clonedBoard.Pieces.Find(p => p is King && p.Color == PlayerColors.BLACK) as King ?? throw new Exception("Black king not found");
+
+        (_, Move? bestMove) = await Task.Run(() => Evaluate(clonedBoard, depth, PlayingAs, whiteKing, blackKing));
         return bestMove?.Clone(board) ?? throw new NullReferenceException("Best move not found.");
     }
 
-    private (int, Move?) Evaluate(Board board, int depth, PlayerColors playerToMove)
+    private (int, Move?) Evaluate(Board board, int depth, PlayerColors playerToMove, King whiteKing, King blackKing)
     {
         //Recursive depth cutoff.
         if (depth == 0)
@@ -46,8 +51,7 @@ public class Engine
         if (allLegalMoves.Count == 0)
         {
             //Find the moving player's king. Checkmate if in check, otherwise stalemate.
-            King? movingPlayerKing = board.Pieces.Find(p => p is King && p.Color == playerToMove) as King;
-            if (movingPlayerKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong");
+            King movingPlayerKing = playerToMove == PlayerColors.WHITE ? whiteKing : blackKing;
 
             //This is just an arbitrary extremely low value for checkmates. We are avoiding int.MinValue due to overflow concerns.
             const int checkMateScore = -100_000_000;
@@ -63,11 +67,12 @@ public class Engine
         //and recursively update the evaluation if we find something better.
         Move? bestMove = null;
         int bestEvaluation = int.MinValue;
+        PlayerColors nextPlayer = playerToMove == PlayerColors.WHITE ? PlayerColors.BLACK : PlayerColors.WHITE;
+
         foreach (Move m in allLegalMoves)
         {
             m.Execute(true);
-            PlayerColors nextPlayer = playerToMove == PlayerColors.WHITE ? PlayerColors.BLACK : PlayerColors.WHITE;
-            (int evaluation, _) = Evaluate(board, depth - 1, nextPlayer);
+            (int evaluation, _) = Evaluate(board, depth - 1, nextPlayer, whiteKing, blackKing);
             m.Undo();
             //We need to negate the evaluation for the recursive call, since it's always the other player that is moving.
             evaluation = -evaluation;
