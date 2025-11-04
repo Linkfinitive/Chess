@@ -8,7 +8,7 @@ namespace Chess.View;
 
 public class BoardView : IView
 {
-    private readonly Board _board;
+    private Board _board;
 
     public BoardView(Board board)
     {
@@ -36,27 +36,23 @@ public class BoardView : IView
 
     public void HandleMouseUp(Point2D mouseUpLocation)
     {
-        foreach (Piece p in _board.Pieces)
+        Piece? pickedUpPiece = GameController.Instance.PiecePickedUp;
+        if (pickedUpPiece is null) return;
+
+        foreach (Square s in _board.Squares)
         {
-            if (p.IsPickedUp)
+            if (SquareIsAt(s, (int)mouseUpLocation.X, (int)mouseUpLocation.Y))
             {
-                foreach (Square s in _board.Squares)
-                {
-                    if (SquareIsAt(s, (int)mouseUpLocation.X, (int)mouseUpLocation.Y))
-                    {
-                        Square newLocation = s;
-                        p.IsPickedUp = false;
+                Square newLocation = s;
+                pickedUpPiece.IsPickedUp = false;
 
-                        //We'll only handle the move if the Engine isn't thinking - cause if it is then it's the engine's turn.
-                        if (GameController.Instance.EngineIsThinking) return;
-                        GameController.Instance.HandlePlayerMove(newLocation, p);
-                    }
-                }
-
-                p.IsPickedUp = false;
-                break;
+                //We'll only handle the move if the Engine isn't thinking - cause if it is then it's the engine's turn.
+                if (GameController.Instance.EngineIsThinking) return;
+                GameController.Instance.HandlePlayerMove(newLocation, pickedUpPiece);
             }
         }
+
+        pickedUpPiece.IsPickedUp = false;
     }
 
     private void DrawBoard()
