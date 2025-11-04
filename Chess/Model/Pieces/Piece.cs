@@ -51,10 +51,9 @@ public abstract class Piece
             m.Execute();
 
             //Check that the king of the moving player is not in check.
-            if (friendlyKing.IsInCheck) continue;
-
             //If the move is fully legal, we can add it to the list to return.
-            legalMoves.Add(m);
+            if (!friendlyKing.IsInCheck) legalMoves.Add(m);
+
             m.Undo();
         }
 
