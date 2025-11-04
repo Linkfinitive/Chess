@@ -8,7 +8,7 @@ public class Engine
 
     public Engine()
     {
-        _evaluationStrategy = new ExampleEvaluationStrategy();
+        _evaluationStrategy = new CountMaterialStrategy();
     }
 
     public Move FindBestMove(Board board, int depth)
