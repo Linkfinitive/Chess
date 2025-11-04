@@ -32,24 +32,27 @@ public abstract class Piece
 
     protected abstract List<Move> GetPseudoLegalMoves(Board board);
 
-    public List<Move> GetLegalMoves(Board board)
+    public List<Move> GetLegalMoves()
     {
+        Board board = Location.Board;
+
         List<Move> pseudoLegalMoves = GetPseudoLegalMoves(board);
         List<Move> legalMoves = new List<Move>();
 
+        //Precompute the friendly king so we don't need to do it in every iteration of the loop
+        King? friendlyKing = board.Pieces.Find(p => p.GetType().Name == "King" && p.Color == Color) as King;
+        if (friendlyKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong.");
+
         foreach (Move m in pseudoLegalMoves)
         {
-            //Take a copy of the board and move and execute the move on the cloned board.
-            Board clonedBoard = board.Clone();
-            m.CloneAndExecute(clonedBoard);
+            m.Execute();
 
             //Check that the king of the moving player is not in check.
-            King? friendlyKing = clonedBoard.Pieces.Find(p => p.GetType().Name == "King" && p.Color == Color) as King;
-            if (friendlyKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong.");
             if (friendlyKing.IsInCheck) continue;
 
             //If the move is fully legal, we can add it to the list to return.
             legalMoves.Add(m);
+            m.Undo();
         }
 
         return legalMoves;

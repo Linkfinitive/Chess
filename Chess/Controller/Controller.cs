@@ -93,7 +93,7 @@ public class GameController
         if (pieceMoved.Color != PlayerToMove) return;
 
         //Get the legal moves for this piece
-        List<Move> legalMoves = pieceMoved.GetLegalMoves(_board);
+        List<Move> legalMoves = pieceMoved.GetLegalMoves();
 
         //Find the specific move we are trying to make based on the mouse movement
         Move? newMove = legalMoves.Find(m => m.To == to);
@@ -104,7 +104,7 @@ public class GameController
         MoveHistory.AddMove(newMove);
 
         //Set the next player to move, or set the status to an end of game state.
-        GameStatus = UpdateGameStatus(newMove);
+        GameStatus = CalculateNewGameStatus();
     }
 
     public void SetUp()
@@ -138,10 +138,32 @@ public class GameController
         SplashKit.DrawBitmapOnBitmap(square, original, x, y);
     }
 
-    private GameStatus UpdateGameStatus(Move lastMove)
+    private GameStatus CalculateNewGameStatus()
     {
-        if (lastMove.IsCheckmate) return GameStatus.CHECKMATE;
-        if (lastMove.IsStalemate) return GameStatus.STALEMATE;
+        //Figure out who the next player is.
+        PlayerColors nextPlayer = PlayerToMove == PlayerColors.WHITE ? PlayerColors.BLACK : PlayerColors.WHITE;
+
+        //Get all the legal moves for the next player to calculate checks and checkmates.
+        int numberOfLegalMoves = 0;
+        Board clonedBoard = _board.Clone();
+        foreach (Piece p in _board.Pieces.Where(p => p.Color == nextPlayer))
+        {
+            //Unfortunately, the search for the cloned piece must be done inside this loop because calling GetLegalMoves() modifies the
+            //board of the piece we are calculating the legal moves for. Since we are iterating through the pieces on that board now,
+            //we need to avoid making changes to the collection. It shouldn't be too bad though, because this is only called once when
+            //a move is played for real, and not when moves are executed just for checking by the engine or other processes.
+            Piece? clonedPiece = clonedBoard.PieceAt(clonedBoard.SquareCalled(p.Location.GetAlgebraicPosition()));
+            if (clonedPiece is null) throw new NullReferenceException("Piece not found - something went wrong with the cloning process.");
+            numberOfLegalMoves += clonedPiece.GetLegalMoves().Count;
+        }
+
+        //If the next player has no legal moves, then it's either checkmate or stalemate depending on if they're in check.
+        if (numberOfLegalMoves == 0)
+        {
+            King? nextPlayerKing = _board.Pieces.Find(p => p is King && p.Color == nextPlayer) as King;
+            if (nextPlayerKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong.");
+            return nextPlayerKing.IsInCheck ? GameStatus.CHECKMATE : GameStatus.STALEMATE;
+        }
 
         //TODO: Add checks for draw by 50 move rule, 3fold repetition, dead position, and insufficient material. Agreement doesn't work cause it's a computer.
 
