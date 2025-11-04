@@ -176,4 +176,25 @@ public class Move : ICommand
             _ => throw new ArgumentException("Piece must be one of the piece types: King, Queen, Knight, Bishop, Rook, Pawn")
         };
     }
+
+    public Move Clone(Board clonedBoard)
+    {
+        if (_hasExecuted) throw new InvalidOperationException("Cannot clone a move that has already been executed.");
+
+        Square clonedFrom = clonedBoard.SquareCalled(_from.GetAlgebraicPosition());
+        Square clonedTo = clonedBoard.SquareCalled(To.GetAlgebraicPosition());
+        Piece clonedPiece = clonedBoard.PieceAt(clonedFrom) ?? throw new NullReferenceException("Piece to be moved is null - something went wrong with the cloning process");
+
+        Piece? clonedCaptured = null;
+        if (_pieceCaptured is not null)
+        {
+            //In a previous implementation, it was assumed that a captured piece would always be at this.To.
+            //This did not support en passant, obviously, and so hence why this implementation seems complicated.
+            Square capturedLocationOnOriginalBoard = _pieceCaptured.Location;
+            Square clonedCapturedSquare = clonedBoard.SquareCalled(capturedLocationOnOriginalBoard.GetAlgebraicPosition());
+            clonedCaptured = clonedBoard.PieceAt(clonedCapturedSquare);
+        }
+
+        return new Move(clonedFrom, clonedTo, clonedPiece, clonedCaptured);
+    }
 }
