@@ -4,16 +4,28 @@ namespace Chess.Model.Pieces;
 
 public abstract class Piece
 {
+    private Square _location;
+
     protected Piece(PlayerColors color, Square location, bool hasMoved)
     {
         //The constructor gives the option to set if the piece has moved because it matters for promoted pieces, and cloned boards.
+        //In general, though, HasMoved is automatically set to true when the Location is updated.
         Color = color;
-        Location = location;
+        _location = location;
         HasMoved = hasMoved;
     }
 
     public PlayerColors Color { get; }
-    public Square Location { get; set; }
+
+    public Square Location
+    {
+        get => _location;
+        set
+        {
+            _location = value;
+            HasMoved = true;
+        }
+    }
 
     public bool HasMoved { get; set; }
     public bool IsPickedUp { get; set; }
