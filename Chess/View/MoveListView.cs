@@ -14,8 +14,6 @@ public class MoveListView : IView
         _moveHistory = moveHistory;
     }
 
-    public bool EngineIsThinking { get; set; } = false;
-
     public void Draw()
     {
         string gameStatusText = GameController.Instance.GameStatus switch

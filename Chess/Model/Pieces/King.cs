@@ -15,12 +15,10 @@ public class King : Piece
         }
     }
 
-    protected override List<Move> GetPseudoLegalMoves()
+    protected override List<Move> GetPseudoLegalMoves(Board board)
     {
-        Board board = Location.Board;
-
         //Adds the regular moves
-        List<Move> legalMoves = GetPseudoLegalSingleSpaceSlidingMoves();
+        List<Move> legalMoves = GetPseudoLegalSingleSpaceSlidingMoves(board);
 
         // Castling
         //You cannot castle if the king has moved before
@@ -73,11 +71,10 @@ public class King : Piece
         return legalMoves;
     }
 
-    private List<Move> GetPseudoLegalSingleSpaceSlidingMoves()
+    private List<Move> GetPseudoLegalSingleSpaceSlidingMoves(Board board)
     {
-        Board board = Location.Board;
         List<Move> pseudoLegalMoves = new List<Move>();
-        foreach (Square s in GetAttackedSquares())
+        foreach (Square s in GetAttackedSquares(board))
         {
             Piece? pieceInWay = board.PieceAt(s);
             if (pieceInWay is not null && pieceInWay.Color == Color) continue;
@@ -94,10 +91,8 @@ public class King : Piece
         return pseudoLegalMoves;
     }
 
-    public override List<Square> GetAttackedSquares()
+    public override List<Square> GetAttackedSquares(Board board)
     {
-        Board board = Location.Board;
-
         List<Square> attackedSquares = new List<Square>();
         int[] xDirections = { 1, -1, 0, 0, 1, 1, -1, -1 };
         int[] yDirections = { 0, 0, 1, -1, 1, -1, 1, -1 };

@@ -7,14 +7,14 @@ public class Pawn : Piece
 {
     public Pawn(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved, PieceType.PAWN) { }
 
-    protected override List<Move> GetPseudoLegalMoves()
+    protected override List<Move> GetPseudoLegalMoves(Board board)
     {
         List<Move> pseudoLegalMoves = new List<Move>();
 
-        Move? pseudoLegalEnPassant = GetPseudoLegalEnPassant();
-        Move? pseudoLegalDoublePush = GetPseudoLegalDoublePush();
-        Move? pseudoLegalPush = GetPseudoLegalPush();
-        List<Move> pseudoLegalCaptures = GetPseudoLegalCaptures();
+        Move? pseudoLegalEnPassant = GetPseudoLegalEnPassant(board);
+        Move? pseudoLegalDoublePush = GetPseudoLegalDoublePush(board);
+        Move? pseudoLegalPush = GetPseudoLegalPush(board);
+        List<Move> pseudoLegalCaptures = GetPseudoLegalCaptures(board);
 
         if (pseudoLegalEnPassant is not null) pseudoLegalMoves.Add(pseudoLegalEnPassant);
         if (pseudoLegalDoublePush is not null) pseudoLegalMoves.Add(pseudoLegalDoublePush);
@@ -24,7 +24,7 @@ public class Pawn : Piece
         return pseudoLegalMoves;
     }
 
-    private Move? GetPseudoLegalEnPassant()
+    private Move? GetPseudoLegalEnPassant(Board board)
     {
         //Get the most recently made move, because en passant can only be done if the most recent move was a double push.
         //TODO: Remove this global state.
@@ -40,7 +40,7 @@ public class Pawn : Piece
         if (mostRecentMove.To.Rank != Location.Rank) return null;
 
         //For every square that the pawn would normally attack, if it's in file as the just-double-pushed pawn, then we can take by en passant.
-        foreach (Square s in GetAttackedSquares())
+        foreach (Square s in GetAttackedSquares(board))
         {
             if (mostRecentMove.To.File == s.File)
             {
@@ -51,10 +51,8 @@ public class Pawn : Piece
         return null;
     }
 
-    private Move? GetPseudoLegalDoublePush()
+    private Move? GetPseudoLegalDoublePush(Board board)
     {
-        Board board = Location.Board;
-
         //Cannot perform double push if the piece has already moved.
         if (HasMoved) return null;
 
@@ -72,10 +70,8 @@ public class Pawn : Piece
         return null;
     }
 
-    private Move? GetPseudoLegalPush()
+    private Move? GetPseudoLegalPush(Board board)
     {
-        Board board = Location.Board;
-
         int rank = Location.Rank;
         int file = Location.File;
         int direction = GetDirection();
@@ -85,12 +81,10 @@ public class Pawn : Piece
         return pieceInWay is null ? new Move(Location, destinationSquare, this) : null;
     }
 
-    private List<Move> GetPseudoLegalCaptures()
+    private List<Move> GetPseudoLegalCaptures(Board board)
     {
-        Board board = Location.Board;
-
         List<Move> pseudoLegalCaptures = new List<Move>();
-        foreach (Square s in GetAttackedSquares())
+        foreach (Square s in GetAttackedSquares(board))
         {
             Piece? pieceToCapture = board.PieceAt(s);
             if (pieceToCapture is not null && pieceToCapture.Color != Color)
@@ -102,17 +96,15 @@ public class Pawn : Piece
         return pseudoLegalCaptures;
     }
 
-    public override List<Square> GetAttackedSquares()
+    public override List<Square> GetAttackedSquares(Board board)
     {
-        Board board = Location.Board;
-
         List<Square> attackedSquares = new List<Square>();
         int direction = GetDirection();
         int rank = Location.Rank + direction;
         foreach (int fileOffset in new[] { -1, 1 })
         {
             int file = Location.File + fileOffset;
-            if (rank is >= 0 and < 8 && file is >= 0 and < 8)
+            if (rank >= 0 && rank < 8 && file >= 0 && file < 8)
             {
                 attackedSquares.Add(board.SquareAt(rank, file));
             }

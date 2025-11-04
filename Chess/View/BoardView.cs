@@ -9,12 +9,10 @@ namespace Chess.View;
 public class BoardView : IView
 {
     private readonly Board _board;
-    public bool Locked { get; set; }
 
     public BoardView(Board board)
     {
         _board = board;
-        Locked = false;
     }
 
     public void Draw()
@@ -59,8 +57,7 @@ public class BoardView : IView
 
     private void DrawBoard()
     {
-        //If there is a piece picked up, then we want to colour those possible move squares differently as an indication.
-        //Hence, we need to know all the possible moves for the picked up piece.
+        //If there is a piece picked up, then we want to colour those squares differently as an indication.
         List<Move> possibleMoves = new List<Move>();
         if (GameController.Instance.PiecePickedUp is not null)
             //Get every move that the picked-up piece can make.

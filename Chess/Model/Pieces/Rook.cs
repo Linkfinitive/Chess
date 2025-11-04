@@ -6,16 +6,16 @@ public class Rook : SlidingPiece
 {
     public Rook(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved, PieceType.ROOK) { }
 
-    protected override List<Move> GetPseudoLegalMoves()
+    protected override List<Move> GetPseudoLegalMoves(Board board)
     {
-        return GetSlidingPseudoLegalMoves();
+        return GetSlidingPseudoLegalMoves(board);
     }
 
-    public override List<Square> GetAttackedSquares()
+    public override List<Square> GetAttackedSquares(Board board)
     {
         int[] xDirections = new[] { 1, -1, 0, 0 };
         int[] yDirections = new[] { 0, 0, 1, -1 };
 
-        return GetSlidingAttackedSquares(xDirections, yDirections);
+        return GetSlidingAttackedSquares(xDirections, yDirections, board);
     }
 }
