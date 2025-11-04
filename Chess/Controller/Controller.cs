@@ -11,9 +11,9 @@ public class GameController
 {
     private readonly Board _board;
     private readonly BoardView _boardView;
+    private readonly Engine _engine;
     private readonly MoveListView _moveListView;
     private readonly List<IView> _views;
-    private Engine _engine;
 
 
     private GameController()
@@ -106,7 +106,7 @@ public class GameController
         if (PlayerToMove != _engine.PlayingAs) return;
 
         EngineIsThinking = true;
-        // ExecuteMove(_engine.FindBestMove(_board, 4));
+        ExecuteMove(_engine.FindBestMove(_board, 5));
         EngineIsThinking = false;
     }
 
