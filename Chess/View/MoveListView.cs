@@ -68,9 +68,4 @@ public class MoveListView : IView
             SplashKit.DrawText($"{blackMove.GetAlgebraicMove()}", Theme.MOVE_LIST_TEXT, "arial", 12, xLocation, yLocation);
         }
     }
-
-    public void HandleClick(Point2D clickLocation)
-    {
-        throw new NotImplementedException();
-    }
 }

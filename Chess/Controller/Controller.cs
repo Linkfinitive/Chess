@@ -82,11 +82,6 @@ public class GameController
         if (GameStatus is GameStatus.WHITE_TO_MOVE or GameStatus.BLACK_TO_MOVE) _boardView.HandleMouseUp(mouseUpLocation);
     }
 
-    public void HandleClick(Point2D clickLocation)
-    {
-        _moveListView.HandleClick(clickLocation);
-    }
-
     public void HandleMove(Square to, Piece pieceMoved)
     {
         //Check we are moving a piece of the correct colour for this turn.

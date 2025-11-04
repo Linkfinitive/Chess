@@ -10,14 +10,10 @@ do
     SplashKit.ProcessEvents();
     SplashKit.ClearScreen(Theme.BACKGROUND);
 
-    GameController.Instance.DrawViews();
-
     if (SplashKit.MouseDown(MouseButton.LeftButton)) GameController.Instance.HandleMouseDown(SplashKit.MousePosition());
-
     if (SplashKit.MouseUp(MouseButton.LeftButton)) GameController.Instance.HandleMouseUp(SplashKit.MousePosition());
 
-    //TODO: Turn this on.
-    // if (SplashKit.MouseClicked(MouseButton.LeftButton)) GameController.Instance.HandleClick(SplashKit.MousePosition());
+    GameController.Instance.DrawViews();
 
     SplashKit.RefreshScreen();
 } while (!window.CloseRequested);
