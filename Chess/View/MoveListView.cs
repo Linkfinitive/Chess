@@ -26,11 +26,11 @@ public class MoveListView : IView
             _ => throw new Exception("Invalid game status")
         };
 
-        //Title showing game status
-        SplashKit.DrawText(gameStatusText, Theme.GAME_STATUS_TEXT, "arial", 24, GlobalSizes.MOVE_LIST_LEFT_OFFSET, GlobalSizes.MOVE_LIST_VERTICAL_OFFSET);
-
         //If the engine is thinking then we want to let the player know.
         if (GameController.Instance.EngineIsThinking) gameStatusText += " (Engine is Thinking)";
+
+        //Title showing game status
+        SplashKit.DrawText(gameStatusText, Theme.GAME_STATUS_TEXT, "arial", 24, GlobalSizes.MOVE_LIST_LEFT_OFFSET, GlobalSizes.MOVE_LIST_VERTICAL_OFFSET);
 
         List<Move> moves = _moveHistory.Moves.ToList();
         moves.Reverse();
