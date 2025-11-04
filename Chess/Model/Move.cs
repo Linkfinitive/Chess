@@ -15,7 +15,6 @@ public class Move : ICommand
 
     private bool _hasExecuted;
 
-
     public Move(Square from, Square to, Piece pieceMoved, Piece? pieceCaptured = null)
     {
         _from = from;
@@ -49,7 +48,7 @@ public class Move : ICommand
     private bool IsQueenSideCastling => PieceMoved is King && To.GetAlgebraicPosition() is "c1" or "c8" && _from.GetAlgebraicPosition() is "e1" or "e8";
     private bool IsPromotion => PieceMoved is Pawn && To.Rank is 0 or 7;
 
-    public void Undo()
+    public void Execute()
     {
         //Moves can only be undone if they are the most recently executed move. The way this is intended to be used, this shouldn't become a problem,
         //however, I would like to add a check in here if I can think of how to do it. TODO: Add this check.
@@ -105,7 +104,6 @@ public class Move : ICommand
     public void Execute()
     {
         if (_hasExecuted) throw new InvalidOperationException("Cannot execute a move that has already been executed.");
-
         Board board = _from.Board == To.Board ? _from.Board : throw new ArgumentException("Cannot move between board objects");
 
         if (IsPromotion)
@@ -142,6 +140,7 @@ public class Move : ICommand
         PieceMoved.Location = To;
         _hasExecuted = true;
     }
+
 
     public string GetAlgebraicMove() //TODO: Add Piece Disambiguation.
     {

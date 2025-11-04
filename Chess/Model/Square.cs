@@ -49,15 +49,16 @@ public class Square
     public bool IsAttackedBy(PlayerColors player)
     {
         foreach (Piece p in Board.Pieces.Where(p => p.Color == player))
+        {
             //We are iterating the attacked squares, not legal moves, here on purpose: the reason is that pinned
             //pieces are still considered to be controlling their squares and can give check and checkmate.
             //Thanks to https://www.chess.com/forum/view/general/pinned-piece-allowing-mate for the clarification.
-        foreach (Square s in p.GetAttackedSquares(Board))
-
-        {
-            if (s == this)
+            foreach (Square s in p.GetAttackedSquares())
             {
-                return true;
+                if (s == this)
+                {
+                    return true;
+                }
             }
         }
 
