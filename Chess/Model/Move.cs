@@ -176,10 +176,17 @@ public class Move : ICommand
 
         Square clonedFrom = clonedBoard.SquareCalled(_from.GetAlgebraicPosition());
         Square clonedTo = clonedBoard.SquareCalled(To.GetAlgebraicPosition());
-        Piece? clonedPiece = clonedBoard.PieceAt(clonedFrom);
-        Piece? clonedCaptured = clonedBoard.PieceAt(clonedTo);
+        Piece clonedPiece = clonedBoard.PieceAt(clonedFrom) ?? throw new NullReferenceException("Piece to be moved is null - something went wrong with the cloning process");
 
-        if (clonedPiece is null) throw new NullReferenceException("Piece to be moved is null - something went wrong with the cloning process");
+        Piece? clonedCaptured = null;
+        if (_pieceCaptured is not null)
+        {
+            //In a previous implementation, it was assumed that a captured piece would always be at this.To.
+            //This did not support en passant, obviously, and so hence why this implementation seems complicated.
+            Square capturedLocationOnOriginalBoard = _pieceCaptured.Location;
+            Square clonedCapturedSquare = clonedBoard.SquareCalled(capturedLocationOnOriginalBoard.GetAlgebraicPosition());
+            clonedCaptured = clonedBoard.PieceAt(clonedCapturedSquare);
+        }
 
         return new Move(clonedFrom, clonedTo, clonedPiece, clonedCaptured);
     }
