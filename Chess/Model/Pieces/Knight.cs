@@ -4,7 +4,7 @@ namespace Chess.Model.Pieces;
 
 public class Knight : Piece
 {
-    public Knight(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved) { }
+    public Knight(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved, PieceType.KNIGHT) { }
 
     protected override List<Move> GetPseudoLegalMoves(Board board)
     {

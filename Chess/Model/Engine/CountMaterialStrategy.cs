@@ -11,14 +11,14 @@ public class CountMaterialStrategy : IEvaluationStrategy
 
         foreach (Piece p in board.Pieces)
         {
-            int pieceScore = p.GetType().Name switch
+            int pieceScore = p.Type switch
             {
-                "Pawn" => 1,
-                "Knight" => 3,
-                "Bishop" => 3,
-                "Rook" => 5,
-                "Queen" => 9,
-                "King" => 0,
+                PieceType.PAWN => 1,
+                PieceType.KNIGHT => 3,
+                PieceType.BISHOP => 3,
+                PieceType.ROOK => 5,
+                PieceType.QUEEN => 9,
+                PieceType.KING => 0,
                 _ => throw new Exception("Invalid piece type.")
             };
 

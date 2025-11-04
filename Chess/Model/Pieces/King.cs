@@ -4,7 +4,7 @@ namespace Chess.Model.Pieces;
 
 public class King : Piece
 {
-    public King(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved) { }
+    public King(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved, PieceType.KING) { }
 
     public bool IsInCheck
     {
@@ -34,7 +34,7 @@ public class King : Piece
         List<Rook> unMovedFriendlyRooks = new List<Rook>();
         foreach (Piece p in board.Pieces)
         {
-            if (p.GetType().Name != "Rook") continue;
+            if (p is not Rook) continue;
             if (p.HasMoved) continue;
             if (p.Color == otherPlayer) continue;
             unMovedFriendlyRooks.Add((Rook)p);

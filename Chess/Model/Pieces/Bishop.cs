@@ -4,7 +4,7 @@ namespace Chess.Model.Pieces;
 
 public class Bishop : SlidingPiece
 {
-    public Bishop(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved) { }
+    public Bishop(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved, PieceType.BISHOP) { }
 
     protected override List<Move> GetPseudoLegalMoves(Board board)
     {

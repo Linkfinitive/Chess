@@ -4,7 +4,7 @@ namespace Chess.Model.Pieces;
 
 public class Rook : SlidingPiece
 {
-    public Rook(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved) { }
+    public Rook(PlayerColors color, Square location, bool hasMoved = false) : base(color, location, hasMoved, PieceType.ROOK) { }
 
     protected override List<Move> GetPseudoLegalMoves(Board board)
     {
