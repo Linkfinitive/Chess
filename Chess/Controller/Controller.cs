@@ -15,9 +15,11 @@ public class GameController
     private readonly List<IView> _views;
     private Engine _engine;
 
+
     private GameController()
     {
-        _engine = new Engine();
+        _engine = new Engine(PlayerColors.BLACK); //TODO: Add support for playing as Black as the user.
+        EngineIsThinking = false;
 
         _board = new Board();
         MoveHistory = new MoveHistory();
@@ -29,6 +31,8 @@ public class GameController
 
         _views = new List<IView> { _boardView, _moveListView };
     }
+
+    public bool EngineIsThinking { get; private set; }
 
     public GameStatus GameStatus { get; private set; }
 
@@ -48,7 +52,6 @@ public class GameController
     public MoveHistory MoveHistory { get; }
 
     public static GameController Instance { get; } = new GameController();
-
 
     public Piece? PiecePickedUp
     {
@@ -82,7 +85,7 @@ public class GameController
         if (GameStatus is GameStatus.WHITE_TO_MOVE or GameStatus.BLACK_TO_MOVE) _boardView.HandleMouseUp(mouseUpLocation);
     }
 
-    public void HandleMove(Square to, Piece pieceMoved)
+    public void HandlePlayerMove(Square to, Piece pieceMoved)
     {
         //Check we are moving a piece of the correct colour for this turn.
         if (pieceMoved.Color != PlayerToMove) return;
@@ -94,9 +97,24 @@ public class GameController
         Move? newMove = legalMoves.Find(m => m.To == to);
         if (newMove is null) return;
 
+        ExecuteMove(newMove);
+    }
+
+    public void CheckEngineTurn()
+    {
+        if (EngineIsThinking) return;
+        if (PlayerToMove != _engine.PlayingAs) return;
+
+        EngineIsThinking = true;
+        // ExecuteMove(_engine.FindBestMove(_board, 4));
+        EngineIsThinking = false;
+    }
+
+    private void ExecuteMove(Move move)
+    {
         //Execute the move and add it to the history
-        newMove.Execute();
-        MoveHistory.AddMove(newMove);
+        move.Execute();
+        MoveHistory.AddMove(move);
 
         //Set the next player to move, or set the status to an end of game state.
         GameStatus = CalculateNewGameStatus();

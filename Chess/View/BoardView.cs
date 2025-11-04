@@ -46,7 +46,10 @@ public class BoardView : IView
                     {
                         Square newLocation = s;
                         p.IsPickedUp = false;
-                        GameController.Instance.HandleMove(newLocation, p);
+
+                        //We'll only handle the move if the Engine isn't thinking - cause if it is then it's the engine's turn.
+                        if (GameController.Instance.EngineIsThinking) return;
+                        GameController.Instance.HandlePlayerMove(newLocation, p);
                     }
                 }
 
