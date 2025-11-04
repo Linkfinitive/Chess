@@ -173,8 +173,7 @@ public class GameController
         //If the next player has no legal moves, then it's either checkmate or stalemate depending on if they're in check.
         if (numberOfLegalMoves == 0)
         {
-            King? nextPlayerKing = _board.Pieces.Find(p => p is King && p.Color == nextPlayer) as King;
-            if (nextPlayerKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong.");
+            King nextPlayerKing = nextPlayer == PlayerColors.WHITE ? _board.WhiteKing : _board.BlackKing;
             return nextPlayerKing.IsInCheck ? GameStatus.CHECKMATE : GameStatus.STALEMATE;
         }
 

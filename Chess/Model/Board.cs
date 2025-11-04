@@ -5,6 +5,10 @@ namespace Chess.Model;
 
 public class Board
 {
+    private King? _blackKing;
+
+    private King? _whiteKing;
+
     public Board(bool setupInitialPosition = true)
     {
         Squares = new List<Square>();
@@ -21,6 +25,28 @@ public class Board
         }
 
         if (setupInitialPosition) Pieces = PieceFactory.SetupInitialPosition(this);
+    }
+
+    public King WhiteKing
+    {
+        get
+        {
+            if (_whiteKing is not null) return _whiteKing;
+            King? king = Pieces.Find(p => p.Color == PlayerColors.WHITE && p is King) as King;
+            _whiteKing = king ?? throw new NullReferenceException("White king not found.");
+            return king;
+        }
+    }
+
+    public King BlackKing
+    {
+        get
+        {
+            if (_blackKing is not null) return _blackKing;
+            King? king = Pieces.Find(p => p.Color == PlayerColors.BLACK && p is King) as King;
+            _blackKing = king ?? throw new NullReferenceException("White king not found.");
+            return king;
+        }
     }
 
     public List<Piece> Pieces { get; }

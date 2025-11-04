@@ -6,8 +6,6 @@ public abstract class Piece
 {
     private Square _location;
 
-    public PieceType Type { get; }
-
     protected Piece(PlayerColors color, Square location, bool hasMoved, PieceType type)
     {
         //The constructor gives the option to set if the piece has moved because it matters for promoted pieces, and cloned boards.
@@ -17,6 +15,8 @@ public abstract class Piece
         HasMoved = hasMoved;
         Type = type;
     }
+
+    public PieceType Type { get; }
 
     public PlayerColors Color { get; }
 
@@ -43,9 +43,7 @@ public abstract class Piece
         List<Move> legalMoves = new List<Move>();
 
         //Precompute the friendly king so we don't need to do it in every iteration of the loop
-        King? friendlyKing = board.Pieces.Find(p => p is King && p.Color == Color) as King;
-        if (friendlyKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong.");
-
+        King friendlyKing = Color == PlayerColors.WHITE ? board.WhiteKing : board.BlackKing;
         foreach (Move m in pseudoLegalMoves)
         {
             m.Execute();

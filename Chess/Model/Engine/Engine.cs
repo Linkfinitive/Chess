@@ -30,8 +30,10 @@ public class Engine
         Board clonedBoard = board.Clone();
 
         //Precompute the king objects so that it doesn't have to be done more than once.
-        King whiteKing = clonedBoard.Pieces.Find(p => p is King && p.Color == PlayerColors.WHITE) as King ?? throw new Exception("White king not found");
-        King blackKing = clonedBoard.Pieces.Find(p => p is King && p.Color == PlayerColors.BLACK) as King ?? throw new Exception("Black king not found");
+        //This was more useful before I added the King properties to the board, but I'm
+        //leaving it here because I think it is more legible than the alternative.
+        King whiteKing = clonedBoard.WhiteKing;
+        King blackKing = clonedBoard.BlackKing;
 
         // (_, Move? bestMove) = await Task.Run(() => Negamax(clonedBoard, depth, PlayingAs, whiteKing, blackKing, -Infinity, Infinity));
         (_, Move? bestMove) = Negamax(clonedBoard, depth, PlayingAs, whiteKing, blackKing, -Infinity, Infinity);
