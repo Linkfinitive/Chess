@@ -21,8 +21,7 @@ public class Engine
 
     public PlayerColors PlayingAs { get; }
 
-    //public async Task<Move> FindBestMove(Board board, int depth)
-    public Move FindBestMove(Board board, int depth)
+    public async Task<Move> FindBestMove(Board board, int depth)
     {
         //This method is async so that the UI doesn't freeze during evaluation.
         //We're running the entire recursive evaluation on a cloned board, so that it doesn't
@@ -35,8 +34,7 @@ public class Engine
         King whiteKing = clonedBoard.WhiteKing;
         King blackKing = clonedBoard.BlackKing;
 
-        // (_, Move? bestMove) = await Task.Run(() => Negamax(clonedBoard, depth, PlayingAs, whiteKing, blackKing, -Infinity, Infinity));
-        (_, Move? bestMove) = Negamax(clonedBoard, depth, PlayingAs, whiteKing, blackKing, -Infinity, Infinity);
+        (_, Move? bestMove) = await Task.Run(() => Negamax(clonedBoard, depth, PlayingAs, whiteKing, blackKing, -Infinity, Infinity));
         return bestMove?.Clone(board) ?? throw new NullReferenceException("Best move not found.");
     }
 
@@ -60,7 +58,6 @@ public class Engine
             List<Move> pieceLegalMoves = p.GetLegalMoves();
             allLegalMoves.AddRange(pieceLegalMoves);
         }
-
 
         //We need this to check for checks later.
         King movingPlayerKing = playerToMove == PlayerColors.WHITE ? whiteKing : blackKing;

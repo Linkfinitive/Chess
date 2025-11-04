@@ -100,13 +100,13 @@ public class GameController
         ExecuteMove(newMove);
     }
 
-    public void CheckEngineTurn()
+    public async void CheckEngineTurn()
     {
         if (EngineIsThinking) return;
         if (PlayerToMove != _engine.PlayingAs) return;
 
         EngineIsThinking = true;
-        ExecuteMove(_engine.FindBestMove(_board, 5));
+        ExecuteMove(await _engine.FindBestMove(_board, 4));
         EngineIsThinking = false;
     }
 

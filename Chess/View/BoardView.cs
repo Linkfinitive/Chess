@@ -8,7 +8,7 @@ namespace Chess.View;
 
 public class BoardView : IView
 {
-    private Board _board;
+    private readonly Board _board;
 
     public BoardView(Board board)
     {
