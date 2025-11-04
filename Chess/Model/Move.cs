@@ -15,9 +15,6 @@ public class Move : ICommand
 
     private bool _hasExecuted;
 
-    private bool? _isCheck;
-    private bool? _preventsMovement;
-
     public Move(Square from, Square to, Piece pieceMoved, Piece? pieceCaptured = null)
     {
         _from = from;
@@ -25,44 +22,10 @@ public class Move : ICommand
         PieceMoved = pieceMoved;
         _pieceCaptured = pieceCaptured;
         _hasExecuted = false;
-        _isCheck = null;
-        _preventsMovement = null;
 
         _pieceMovedHadMovedBefore = pieceMoved.HasMoved;
         _castlingRook = null;
     }
-
-    private bool PreventsMovement
-    {
-        //Needs to be lazy evaluated to avoid an infinite loop in the constructor - but needs to be cached because it must be calculated before execution.
-        get
-        {
-            if (_preventsMovement is null)
-            {
-                CalculateCheckStatus();
-            }
-
-            return _preventsMovement!.Value;
-        }
-    }
-
-    private bool IsCheck
-    {
-        //Needs to be lazy evaluated to avoid an infinite loop in the constructor - but needs to be cached because it must be calculated before execution.
-        get
-        {
-            if (_isCheck is null)
-            {
-                CalculateCheckStatus();
-            }
-
-            return _isCheck!.Value;
-        }
-    }
-
-    public bool IsCheckmate => IsCheck && PreventsMovement;
-
-    public bool IsStalemate => !IsCheck && PreventsMovement;
 
     public Piece PieceMoved { get; }
 
@@ -86,11 +49,6 @@ public class Move : ICommand
     private bool IsPromotion => PieceMoved is Pawn && To.Rank is 0 or 7;
 
     public void Execute()
-    {
-        Execute(false);
-    }
-
-    public void Undo()
     {
         //Moves can only be undone if they are the most recently executed move. The way this is intended to be used, this shouldn't become a problem,
         //however, I would like to add a check in here if I can think of how to do it. TODO: Add this check.
@@ -143,14 +101,10 @@ public class Move : ICommand
         _hasExecuted = false;
     }
 
-
-    public void Execute(bool suppressCheckStatusCalculation)
+    public void Execute()
     {
         if (_hasExecuted) throw new InvalidOperationException("Cannot execute a move that has already been executed.");
         Board board = _from.Board == To.Board ? _from.Board : throw new ArgumentException("Cannot move between board objects");
-
-        //We need the ability to suppress this to avoid recursive calls when cloning and executing moves (Because CalculateCheckStatus calls Execute on a clone)
-        if (!suppressCheckStatusCalculation && (_preventsMovement is null || _isCheck is null)) CalculateCheckStatus();
 
         if (IsPromotion)
         {
@@ -177,7 +131,6 @@ public class Move : ICommand
 
             if (_castlingRook is null) throw new NullReferenceException("Castling attempted but there was no rook to castle with");
 
-            PieceMoved.Location = To;
             _castlingRook.Location = squareToMoveRookTo;
             _hasExecuted = true;
             return;
@@ -202,8 +155,9 @@ public class Move : ICommand
 
         if (IsPromotion) algebraicMove += "=Q"; //TODO: Add the ability to promote to other than a Queen.
 
-        if (IsCheck && !IsCheckmate) algebraicMove += "+";
-        if (IsCheckmate) algebraicMove += "#";
+        // if (IsCheck && !IsCheckmate) algebraicMove += "+";
+        // if (IsCheckmate) algebraicMove += "#";
+        //TODO: Bring these back: they're super important.
 
         return algebraicMove;
     }
@@ -241,25 +195,5 @@ public class Move : ICommand
         }
 
         return new Move(clonedFrom, clonedTo, clonedPiece, clonedCaptured);
-    }
-
-    private void CalculateCheckStatus()
-    {
-        //Clone this move and execute on a copy of the board.
-        Board clonedBoard = PieceMoved.Location.Board.Clone();
-        Clone(clonedBoard).Execute(true);
-
-        //See if the opponent is in check after the execution.
-        King? opponentKing = clonedBoard.Pieces.Find(p => p is King && p.Color != PieceMoved.Color) as King;
-        _isCheck = opponentKing?.IsInCheck ?? throw new NullReferenceException("King not found - something has gone seriously wrong.");
-
-        //See if the opponent is able to make any legal moves.
-        List<Move> opponentLegalMoves = new List<Move>();
-        foreach (Piece p in clonedBoard.Pieces.Where(p => p.Color != PieceMoved.Color))
-        {
-            opponentLegalMoves.AddRange(p.GetLegalMoves());
-        }
-
-        _preventsMovement = opponentLegalMoves.Count == 0;
     }
 }

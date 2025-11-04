@@ -9,6 +9,7 @@ public class Engine
     //Checkmate score set to arbitrary large value less than Infinity.
     private const int Infinity = 1_000_000_000;
     private const int CheckmateScore = 100_000_000;
+
     private readonly IEvaluationStrategy _evaluationStrategy;
 
     public Engine(PlayerColors playingAs)
@@ -16,6 +17,7 @@ public class Engine
         _evaluationStrategy = new CountMaterialStrategy();
         PlayingAs = playingAs;
     }
+
 
     public PlayerColors PlayingAs { get; }
 
@@ -27,8 +29,10 @@ public class Engine
         Board clonedBoard = board.Clone();
 
         //Precompute the king objects so that it doesn't have to be done more than once.
-        King whiteKing = clonedBoard.Pieces.Find(p => p is King && p.Color == PlayerColors.WHITE) as King ?? throw new Exception("White king not found");
-        King blackKing = clonedBoard.Pieces.Find(p => p is King && p.Color == PlayerColors.BLACK) as King ?? throw new Exception("Black king not found");
+        //This was more useful before I added the King properties to the board, but I'm
+        //leaving it here because I think it is more legible than the alternative.
+        King whiteKing = clonedBoard.WhiteKing;
+        King blackKing = clonedBoard.BlackKing;
 
         (_, Move? bestMove) = await Task.Run(() => Negamax(clonedBoard, depth, PlayingAs, whiteKing, blackKing, -Infinity, Infinity));
         return bestMove?.Clone(board) ?? throw new NullReferenceException("Best move not found.");
@@ -47,19 +51,16 @@ public class Engine
         }
 
         //Get all the legal moves for the player to move.
-        //Using a for loop instead of LINQ to avoid the overhead of 2 GetEnumerator calls.
+        //Must use ToArray() because we're modifying the board by calling GetLegalMoves() on each piece.
         List<Move> allLegalMoves = new List<Move>();
-        for (int i = 0; i < board.Pieces.Count; i++)
+        foreach (Piece p in board.Pieces.ToArray().Where(p => p.Color == playerToMove))
         {
-            Piece p = board.Pieces[i];
-            if (p.Color != playerToMove) continue;
-            List<Move> pieceLegalMoves = p.GetLegalMoves(false);
+            List<Move> pieceLegalMoves = p.GetLegalMoves();
             allLegalMoves.AddRange(pieceLegalMoves);
         }
 
         //We need this to check for checks later.
         King movingPlayerKing = playerToMove == PlayerColors.WHITE ? whiteKing : blackKing;
-
         //Check if the moving player has been checkmated or a stalemate has been reached.
         if (allLegalMoves.Count == 0)
         {
@@ -76,11 +77,10 @@ public class Engine
         Move? bestMove = null;
         int bestEvaluation = -Infinity;
         PlayerColors nextPlayer = playerToMove == PlayerColors.WHITE ? PlayerColors.BLACK : PlayerColors.WHITE;
-        bool movingPlayerInCheck = movingPlayerKing.IsInCheck;
 
         foreach (Move m in allLegalMoves)
         {
-            m.Execute(!movingPlayerInCheck);
+            m.Execute();
             (int evaluation, _) = Negamax(board, depth - 1, nextPlayer, whiteKing, blackKing, -beta, -alpha);
             m.Undo();
 

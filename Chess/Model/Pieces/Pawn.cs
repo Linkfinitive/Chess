@@ -93,7 +93,10 @@ public class Pawn : Piece
         foreach (Square s in GetAttackedSquares())
         {
             Piece? pieceToCapture = board.PieceAt(s);
-            if (pieceToCapture is not null && pieceToCapture.Color != Color) pseudoLegalCaptures.Add(new Move(Location, s, this, pieceToCapture));
+            if (pieceToCapture is not null && pieceToCapture.Color != Color)
+            {
+                pseudoLegalCaptures.Add(new Move(Location, s, this, pieceToCapture));
+            }
         }
 
         return pseudoLegalCaptures;

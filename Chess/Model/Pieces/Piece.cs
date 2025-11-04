@@ -25,8 +25,8 @@ public abstract class Piece
         get => _location;
         set
         {
-            HasMoved = true;
             _location = value;
+            HasMoved = true;
         }
     }
 
@@ -60,48 +60,24 @@ public abstract class Piece
             //Have to do this before cloning the move, since we can't clone executed moves.
             m.Undo();
 
-            //If the move is fully legal, we can add it to the list to return.
-            if (moveIsLegal) legalMoves.Add(m);
-        }
-
-        return legalMoves;
-    }
-
-    private List<Move> GetLegalMovesUsingClonedBoard()
+    public List<Move> GetLegalMoves()
     {
         Board board = Location.Board;
 
-        //Perform tests on a cloned board to ensure that the UI doesn't get messed up.
-        Board clonedBoard = board.Clone();
-
-        //The cloned analogue of this piece is the piece on the same square on the cloned board.
-        Piece? clonedPiece = clonedBoard.PieceAt(clonedBoard.SquareCalled(Location.GetAlgebraicPosition()));
-        if (clonedPiece is null) throw new NullReferenceException("Couldn't find analogue of this piece on the cloned board - something went wrong in the cloning process.");
-
-        //Find the king of the moving player.
-        King? friendlyKing = clonedBoard.Pieces.Find(p => p is King && p.Color == Color) as King;
-        if (friendlyKing is null) throw new NullReferenceException("King not found - something has gone seriously wrong.");
-
-        List<Move> pseudoLegalMoves = clonedPiece.GetPseudoLegalMoves();
+        List<Move> pseudoLegalMoves = GetPseudoLegalMoves(board);
         List<Move> legalMoves = new List<Move>();
 
+        //Precompute the friendly king so we don't need to do it in every iteration of the loop
+        King friendlyKing = Color == PlayerColors.WHITE ? board.WhiteKing : board.BlackKing;
         foreach (Move m in pseudoLegalMoves)
         {
-            m.Execute(true);
+            m.Execute();
 
             //Check that the king of the moving player is not in check.
-            bool moveIsLegal = !friendlyKing.IsInCheck;
-
-            //Have to do this before cloning the move, since we can't clone executed moves.
-            m.Undo();
-
             //If the move is fully legal, we can add it to the list to return.
-            //Before adding it though, we need to convert it back to the original board.
-            //Avoiding Move.Clone() for this since it searches every piece and we already know which piece we are moving.
-            Square to = board.SquareCalled(m.To.GetAlgebraicPosition());
-            Piece? pieceCaptured = board.PieceAt(to);
-            Move clonedMove = new Move(Location, to, this, pieceCaptured);
-            if (moveIsLegal) legalMoves.Add(clonedMove);
+            if (!friendlyKing.IsInCheck) legalMoves.Add(m);
+
+            m.Undo();
         }
 
         return legalMoves;

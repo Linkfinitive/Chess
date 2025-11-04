@@ -29,7 +29,7 @@ public class MoveListView : IView
         };
 
         //If the engine is thinking then we want to let the player know.
-        if (EngineIsThinking) gameStatusText += " (Engine is Thinking)";
+        if (GameController.Instance.EngineIsThinking) gameStatusText += " (Engine is Thinking)";
 
         //Title showing game status
         SplashKit.DrawText(gameStatusText, Theme.GAME_STATUS_TEXT, "arial", 24, GlobalSizes.MOVE_LIST_LEFT_OFFSET, GlobalSizes.MOVE_LIST_VERTICAL_OFFSET);
@@ -72,10 +72,5 @@ public class MoveListView : IView
             if (blackMove is null) continue;
             SplashKit.DrawText($"{blackMove.GetAlgebraicMove()}", Theme.MOVE_LIST_TEXT, "arial", 12, xLocation, yLocation);
         }
-    }
-
-    public void HandleClick(Point2D clickLocation)
-    {
-        throw new NotImplementedException();
     }
 }
