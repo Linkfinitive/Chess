@@ -148,6 +148,7 @@ public class Move : ICommand
             if (_castlingRook is null) throw new NullReferenceException("Castling attempted but there was no rook to castle with");
 
             _castlingRook.Location = squareToMoveRookTo;
+            PieceMoved.Location = To;
             _hasExecuted = true;
             if (!suppressCheckStatusCalculation) CalculateCheckStatus(board);
             return;
