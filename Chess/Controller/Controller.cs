@@ -12,7 +12,6 @@ public class GameController
     private readonly Board _board;
     private readonly BoardView _boardView;
     private readonly Engine _engine;
-    private readonly MoveListView _moveListView;
     private readonly List<IView> _views;
 
 
@@ -27,9 +26,9 @@ public class GameController
         GameStatus = GameStatus.WHITE_TO_MOVE;
 
         _boardView = new BoardView(_board);
-        _moveListView = new MoveListView(MoveHistory);
+        MoveListView moveListView = new MoveListView(MoveHistory);
 
-        _views = new List<IView> { _boardView, _moveListView };
+        _views = new List<IView> { _boardView, moveListView };
     }
 
     public bool EngineIsThinking { get; private set; }
