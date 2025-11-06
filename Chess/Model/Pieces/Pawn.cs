@@ -27,7 +27,8 @@ public class Pawn : Piece
     private Move? GetPseudoLegalEnPassant(Board board)
     {
         //Get the most recently made move, because en passant can only be done if the most recent move was a double push.
-        //TODO: Remove this global state.
+        //I suspect this is causing some sort of bug, because this won't apply correctly when the engine is thinking.
+        //But, I don't think it's the superbug because en passant is so rare there is no way it's that bad.
         Move? mostRecentMove = GameController.Instance.MoveHistory.MostRecentMove;
 
         //This would only happen if it's the first move of the game, and naturally there would be no en passant available.

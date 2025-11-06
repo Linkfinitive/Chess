@@ -70,7 +70,7 @@ public class Engine
             return (movingPlayerKing.IsInCheck ? -CheckmateScore : 0, null);
         }
 
-        //TODO: Check for other special cases (other draw conditions).
+        //This is where I would check for draw conditions, if I had time.
 
         //Start with a very low initial value, then search through all the possible moves
         //and recursively update the evaluation if we find something better.

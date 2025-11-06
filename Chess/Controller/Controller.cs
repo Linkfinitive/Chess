@@ -18,7 +18,7 @@ public class GameController
 
     private GameController()
     {
-        _engine = new Engine(PlayerColors.BLACK); //TODO: Add support for playing as Black as the user.
+        _engine = new Engine(PlayerColors.BLACK); //One day I will add support for playing black as the user.
         EngineIsThinking = false;
 
         _board = new Board();
@@ -177,7 +177,7 @@ public class GameController
             return nextPlayerKing.IsInCheck ? GameStatus.CHECKMATE : GameStatus.STALEMATE;
         }
 
-        //TODO: Add checks for draw by 50 move rule, 3fold repetition, dead position, and insufficient material. Agreement doesn't work cause it's a computer.
+        //This is where I could check for the various draw conditions, if I had time.
 
         //If nothing special has happened, we can just swap who's turn it is.
         return PlayerToMove == PlayerColors.WHITE ? GameStatus.BLACK_TO_MOVE : GameStatus.WHITE_TO_MOVE;
