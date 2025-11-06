@@ -51,7 +51,7 @@ public class GameController
 
     public MoveHistory MoveHistory { get; }
 
-    public static GameController Instance { get; } = new GameController();
+    public static GameController Instance { get; private set; } = new GameController();
 
     public Piece? PiecePickedUp
     {
@@ -181,5 +181,10 @@ public class GameController
 
         //If nothing special has happened, we can just swap who's turn it is.
         return PlayerToMove == PlayerColors.WHITE ? GameStatus.BLACK_TO_MOVE : GameStatus.WHITE_TO_MOVE;
+    }
+
+    public static void Reset()
+    {
+        Instance = new GameController();
     }
 }

@@ -20,9 +20,9 @@ public class MoveListView : IView
         {
             GameStatus.WHITE_TO_MOVE => "White to Move",
             GameStatus.BLACK_TO_MOVE => "Black to Move",
-            GameStatus.CHECKMATE => "Checkmate",
-            GameStatus.STALEMATE => "Stalemate",
-            GameStatus.DRAW => "Draw",
+            GameStatus.CHECKMATE => "Checkmate (Press R to restart)",
+            GameStatus.STALEMATE => "Stalemate (Press R to restart)",
+            GameStatus.DRAW => "Draw (Press R to restart)",
             _ => throw new Exception("Invalid game status")
         };
 
