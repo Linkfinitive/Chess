@@ -15,6 +15,9 @@ public class Move : ICommand
 
     private bool _hasExecuted;
 
+    private bool? _isCheck;
+    private bool? _isCheckmate;
+
 
     public Move(Square from, Square to, Piece pieceMoved, Piece? pieceCaptured = null)
     {
@@ -26,6 +29,9 @@ public class Move : ICommand
 
         _pieceMovedHadMovedBefore = pieceMoved.HasMoved;
         _castlingRook = null;
+
+        _isCheck = null;
+        _isCheckmate = null;
     }
 
     public Piece PieceMoved { get; }
@@ -52,7 +58,7 @@ public class Move : ICommand
     public void Undo()
     {
         //Moves can only be undone if they are the most recently executed move. The way this is intended to be used, this shouldn't become a problem,
-        //however, I would like to add a check in here if I can think of how to do it. TODO: Add this check.
+        //however, I would like to add a check in here if I can think of how to do it.
 
         if (!_hasExecuted) throw new InvalidOperationException("Cannot undo a move that hasn't been executed.");
         Board board = _from.Board == To.Board ? _from.Board : throw new ArgumentException("Cannot move between board objects");
@@ -104,16 +110,24 @@ public class Move : ICommand
 
     public void Execute()
     {
+        Execute(false);
+    }
+
+    public void Execute(bool suppressCheckStatusCalculation)
+    {
         if (_hasExecuted) throw new InvalidOperationException("Cannot execute a move that has already been executed.");
 
         Board board = _from.Board == To.Board ? _from.Board : throw new ArgumentException("Cannot move between board objects");
 
         if (IsPromotion)
+            //Currently it's only possible to promote to a Queen. This is fine for most games but I would like to add the ability
+            //to promote to other pieces if possible in the future.
         {
-            board.Pieces.Add(new Queen(PieceMoved.Color, To, true)); //TODO: Add the ability to promote to other than a Queen.
+            board.Pieces.Add(new Queen(PieceMoved.Color, To, true));
             board.Pieces.Remove(PieceMoved);
             if (_pieceCaptured is not null) board.Pieces.Remove(_pieceCaptured);
             _hasExecuted = true;
+            if (!suppressCheckStatusCalculation) CalculateCheckStatus(board);
             return;
         }
 
@@ -135,30 +149,46 @@ public class Move : ICommand
 
             _castlingRook.Location = squareToMoveRookTo;
             _hasExecuted = true;
+            if (!suppressCheckStatusCalculation) CalculateCheckStatus(board);
             return;
         }
 
         if (_pieceCaptured is not null) board.Pieces.Remove(_pieceCaptured);
         PieceMoved.Location = To;
         _hasExecuted = true;
+        if (!suppressCheckStatusCalculation) CalculateCheckStatus(board);
     }
 
-    public string GetAlgebraicMove() //TODO: Add Piece Disambiguation.
+    public string GetAlgebraicMove()
+        //Unfortunately, this function does not have "piece disambiguation." If two pieces of the same type and colour could move to the same
+        //square, then this gives no indication of which piece moved. While it isn't perfect, it's okay for seeing an overview of the game that
+        //has been played, and also checking the engine moves if it moves too quickly and you miss it. Hopefully this limitation can be addressed in the future.
     {
         if (IsQueenSideCastling) return "0-0-0";
         if (IsKingSideCastling) return "0-0";
 
         string algebraicMove = GetAlgebraicPieceLetter();
 
-        if (_pieceCaptured is not null) algebraicMove += "x";
+        if (_pieceCaptured is not null)
+        {
+            //If it's a pawn capture we need to add in the file letter.
+            if (PieceMoved is Pawn) algebraicMove += _from.GetAlgebraicPosition()[0];
+            algebraicMove += "x";
+        }
 
         algebraicMove += To.GetAlgebraicPosition();
 
-        if (IsPromotion) algebraicMove += "=Q"; //TODO: Add the ability to promote to other than a Queen.
+        if (IsPromotion) algebraicMove += "=Q";
 
-        // if (IsCheck && !IsCheckmate) algebraicMove += "+";
-        // if (IsCheckmate) algebraicMove += "#";
-        //TODO: Bring these back: they're super important.
+        //These variables will never be null if the move has executed. If the move has not been executed, then we can't get the algebraic move.
+        // This should not be a problem, based on the way this is used, however it is not ideal and I would like to fix it at some point.
+        if (!_hasExecuted) throw new InvalidOperationException("Cannot get algebraic move of a move that has not been executed.");
+        if (_isCheck is null || _isCheckmate is null) throw new InvalidOperationException("Check and checkmate status have not been calculated for this move.");
+        if (_isCheckmate!.Value)
+        {
+            algebraicMove += "#";
+        }
+        else if (_isCheck!.Value) algebraicMove += "+";
 
         return algebraicMove;
     }
@@ -196,5 +226,27 @@ public class Move : ICommand
         }
 
         return new Move(clonedFrom, clonedTo, clonedPiece, clonedCaptured);
+    }
+
+    private void CalculateCheckStatus(Board board)
+    {
+        if (!_hasExecuted) throw new InvalidOperationException("Cannot calculate check status for a move that has not been executed.");
+
+        King opponentKing = PieceMoved.Color == PlayerColors.WHITE ? board.BlackKing : board.WhiteKing;
+        _isCheck = opponentKing.IsInCheck;
+
+        //See if the opponent is able to make any legal moves.
+        //Cloning must be used here - otherwise it suffers from a strange bug where pieces can take pieces but then
+        //both pieces are present on the same square. This must be related somehow to the almighty superbug.
+        int numberOfLegalMoves = 0;
+        Board clonedBoard = board.Clone();
+        foreach (Piece p in board.Pieces.Where(p => p.Color != PieceMoved.Color))
+        {
+            Piece? clonedPiece = clonedBoard.PieceAt(clonedBoard.SquareCalled(p.Location.GetAlgebraicPosition()));
+            if (clonedPiece is null) throw new NullReferenceException("Piece not found - something went wrong with the cloning process.");
+            numberOfLegalMoves += clonedPiece.GetLegalMoves().Count;
+        }
+
+        _isCheckmate = numberOfLegalMoves == 0 && _isCheck.Value;
     }
 }

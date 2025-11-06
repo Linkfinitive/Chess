@@ -46,7 +46,7 @@ public abstract class Piece
         King friendlyKing = Color == PlayerColors.WHITE ? board.WhiteKing : board.BlackKing;
         foreach (Move m in pseudoLegalMoves)
         {
-            m.Execute();
+            m.Execute(true);
 
             //Check that the king of the moving player is not in check.
             //If the move is fully legal, we can add it to the list to return.

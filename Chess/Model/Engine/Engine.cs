@@ -80,7 +80,7 @@ public class Engine
 
         foreach (Move m in allLegalMoves)
         {
-            m.Execute();
+            m.Execute(true);
             (int evaluation, _) = Negamax(board, depth - 1, nextPlayer, whiteKing, blackKing, -beta, -alpha);
             m.Undo();
 
