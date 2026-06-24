@@ -1,5 +1,5 @@
-# Old Chess App
-This program was created as a project for a university unit. There are several issues and the interface is very rudimentary. The project has been superceded by a more advanced (but still very simple) chess engine CLI. Check [here](https://linkfinitive.com) to see how that's going.
+# Chess App
+This program was created as a project for a university unit. There are several issues and the interface is very rudimentary.
 
 ## Play
 1. Ensure you have [.NET 9](https://dotnet.microsoft.com/en-us/download/dotnet) installed.
